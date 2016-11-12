@@ -1,5 +1,7 @@
 package com.ababilo.pwd.pwdmanager;
 
+import com.ababilo.pwd.pwdmanager.core.presenter.MainPresenter;
+
 import javax.inject.Singleton;
 
 import dagger.Component;
@@ -10,4 +12,6 @@ import dagger.Component;
 @Component(modules = {PresenterModule.class})
 @Singleton
 public interface PresenterComponent {
+
+    void inject(MainPresenter presenter);
 }

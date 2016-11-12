@@ -18,12 +18,17 @@
         <item name="selectableRectDrawableInverse">@drawable/ripple_selectable_rect_inverse</item>
         <item name="selectableRectDrawableColored">@drawable/ripple_selectable_rect_colored</item>
         <item name="selectableRoundedRectDrawable">@drawable/ripple_selectable_rounded_rect</item>
-        <item name="selectableRoundedRectDrawableInverse">@drawable/ripple_selectable_rounded_rect_inverse</item>
-        <item name="selectableRoundedRectDrawableColored">@drawable/ripple_selectable_rounded_rect_colored</item>
+        <item name="selectableRoundedRectDrawableInverse">
+            @drawable/ripple_selectable_rounded_rect_inverse
+        </item>
+        <item name="selectableRoundedRectDrawableColored">
+            @drawable/ripple_selectable_rounded_rect_colored
+        </item>
 
         <item name="android:actionBarTheme">@style/AppTheme.AppBar.Dark</item>
         <item name="android:actionBarPopupTheme">@style/AppTheme.Overlay.Light</item>
         <item name="android:popupTheme">@style/AppTheme.Overlay.Light</item>
+        <item name="colorAccent">@color/material_gray_600</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -35,61 +40,48 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog">
-    </style>
+    <style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog" />
 
-    <style name="AppTheme.Dialog.Alert" parent="Theme.AppCompat.Light.Dialog.Alert">
-    </style>
+    <style name="AppTheme.Dialog.Alert" parent="Theme.AppCompat.Light.Dialog.Alert" />
 
     <!-- Light App Bar Theme -->
-    <style name="AppTheme.AppBar.Light" parent="ThemeOverlay.AppCompat.ActionBar">
-    </style>
+    <style name="AppTheme.AppBar.Light" parent="ThemeOverlay.AppCompat.ActionBar" />
 
     <!-- Dark App Bar Theme -->
-    <style name="AppTheme.AppBar.Dark" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-    </style>
+    <style name="AppTheme.AppBar.Dark" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
 
     <!-- Light Overlay Theme -->
-    <style name="AppTheme.Overlay.Light" parent="ThemeOverlay.AppCompat.Light">
-    </style>
+    <style name="AppTheme.Overlay.Light" parent="ThemeOverlay.AppCompat.Light" />
 
     <!-- Dark Overlay Theme -->
-    <style name="AppTheme.Overlay.Dark" parent="ThemeOverlay.AppCompat.Dark">
-    </style>
+    <style name="AppTheme.Overlay.Dark" parent="ThemeOverlay.AppCompat.Dark" />
 
     <!-- Button Styles -->
-    <style name="ButtonStyle" parent="Widget.AppCompat.Button">
-    </style>
+    <style name="ButtonStyle" parent="Widget.AppCompat.Button" />
 
     <style name="ButtonStyle.NoRaise">
         <!-- Pre API 21 has no raise effect by default -->
     </style>
 
-    <style name="ButtonStyle.Colored" parent="Widget.AppCompat.Button.Colored">
-    </style>
+    <style name="ButtonStyle.Colored" parent="Widget.AppCompat.Button.Colored" />
 
     <style name="ButtonStyle.Colored.NoRaise">
         <!-- Pre API 21 has no raise effect by default -->
     </style>
 
-    <style name="ButtonStyle.Borderless" parent="Widget.AppCompat.Button.Borderless">
+    <style name="ButtonStyle.Borderless" parent="Widget.AppCompat.Button.Borderless" />
+
+    <style name="ButtonStyle.Borderless.ColoredText" parent="Widget.AppCompat.Button.Borderless.Colored" />
+
+    <style name="FloatingActionButtonStyle" parent="Widget.Design.FloatingActionButton">
     </style>
 
-    <style name="ButtonStyle.Borderless.ColoredText" parent="Widget.AppCompat.Button.Borderless.Colored">
-    </style>
+    <style name="RadioButtonStyle" parent="Widget.AppCompat.CompoundButton.RadioButton" />
 
-    <!--<style name="FloatingActionButtonStyle" parent="Widget.Design.FloatingActionButton">-->
-    <!--</style>-->
+    <style name="CheckBoxStyle" parent="Widget.AppCompat.CompoundButton.CheckBox" />
 
-    <style name="RadioButtonStyle" parent="Widget.AppCompat.CompoundButton.RadioButton">
-    </style>
-
-    <style name="CheckBoxStyle" parent="Widget.AppCompat.CompoundButton.CheckBox">
-    </style>
-
-    <style name="SwitchStyle" parent="Widget.AppCompat.CompoundButton.Switch">
-    </style>
+    <style name="SwitchStyle" parent="Widget.AppCompat.CompoundButton.Switch" />
 
     <!-- Selectable Item Styles -->
     <style name="SelectableItemStyle">
@@ -122,46 +114,35 @@
     </style>
 
     <!-- Text Styles -->
-    <style name="TextStyle" parent="TextAppearance.AppCompat">
-    </style>
+    <style name="TextStyle" parent="TextAppearance.AppCompat" />
 
-    <style name="TextStyle.Title" parent="TextAppearance.AppCompat.Title">
-    </style>
+    <style name="TextStyle.Title" parent="TextAppearance.AppCompat.Title" />
 
-    <style name="TextStyle.Body1" parent="TextAppearance.AppCompat.Body1">
-    </style>
+    <style name="TextStyle.Body1" parent="TextAppearance.AppCompat.Body1" />
 
-    <style name="TextStyle.Body2" parent="TextAppearance.AppCompat.Body2">
-    </style>
+    <style name="TextStyle.Body2" parent="TextAppearance.AppCompat.Body2" />
 
     <!-- Edit Text Styles -->
-    <style name="EditTextStyle" parent="Widget.AppCompat.EditText">
-    </style>
+    <style name="EditTextStyle" parent="Widget.AppCompat.EditText" />
 
-    <!--<style name="TextInputLayoutStyle" parent="Widget.Design.TextInputLayout">-->
-    <!--</style>-->
+    <style name="TextInputLayoutStyle" parent="Widget.Design.TextInputLayout">
+    </style>
 
     <!-- Spinner Styles -->
-    <style name="SpinnerStyle" parent="Widget.AppCompat.Spinner">
-    </style>
+    <style name="SpinnerStyle" parent="Widget.AppCompat.Spinner" />
 
-    <style name="SpinnerStyle.Underlined" parent="Widget.AppCompat.Spinner.Underlined">
-    </style>
+    <style name="SpinnerStyle.Underlined" parent="Widget.AppCompat.Spinner.Underlined" />
 
     <!-- Progress Bar Styles -->
-    <style name="ProgressBarStyle" parent="Widget.AppCompat.ProgressBar">
-    </style>
+    <style name="ProgressBarStyle" parent="Widget.AppCompat.ProgressBar" />
 
-    <style name="ProgressBarStyle.Horizontal" parent="Widget.AppCompat.ProgressBar.Horizontal">
-    </style>
+    <style name="ProgressBarStyle.Horizontal" parent="Widget.AppCompat.ProgressBar.Horizontal" />
 
     <!-- Slider Styles -->
-    <style name="SeekbarStyle" parent="Widget.AppCompat.SeekBar">
-    </style>
+    <style name="SeekbarStyle" parent="Widget.AppCompat.SeekBar" />
 
     <!-- Image Styles -->
-    <style name="ImageStyle">
-    </style>
+    <style name="ImageStyle" />
 
     <style name="ImageStyle.Colored">
         <item name="android:tint">?colorAccent</item>
