@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'me.tatarka.retrolambda'
 
 android {
     compileSdkVersion 25
@@ -10,6 +12,12 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        if (project.hasProperty('service_endpoint')) {
+            resValue "string", "service.endpoint", service_endpoint
+        } else {
+            resValue "string", "service.endpoint", "http://localhost:8080"
+        }
     }
     buildTypes {
         release {
@@ -17,10 +25,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    if (project.hasProperty('service_endpoint')) {
-        resValue "string", "service.endpoint", service_endpoint
-    } else {
-        resValue "string", "service.endpoint", "http://localhost:8080"
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
     }
 }
 
@@ -35,6 +47,18 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.0.2'
     compile 'com.squareup.retrofit2:converter-gson:2.0.2'
     compile 'com.squareup.okhttp3:okhttp:3.1.2'
+
+    compile 'io.reactivex:rxjava:1.1.0'
+    compile 'io.reactivex:rxandroid:1.1.0'
+    compile 'com.arello-mobile:moxy:0.4.2'
+    compile 'com.arello-mobile:moxy-android:0.4.2'
+    apt 'com.arello-mobile:moxy-compiler:0.4.2'
+
+    apt "com.google.dagger:dagger-compiler:2.2"
+    compile "com.google.dagger:dagger:2.2"
+    provided 'javax.annotation:jsr250-api:1.0'
+    compile 'com.jakewharton:butterknife:8.0.1'
+    apt 'com.jakewharton:butterknife-compiler:8.0.1'
 
     testCompile 'junit:junit:4.12'
 }
