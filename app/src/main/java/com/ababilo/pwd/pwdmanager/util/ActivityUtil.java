@@ -111,4 +111,13 @@ public class ActivityUtil {
                 .replace(target, fragment)
                 .commit();
     }
+
+    public static void loadRootActivity(Context base, Class<? extends Activity> load, Map<String, ? extends Serializable> params) {
+        Intent intent = new Intent(base, load);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+        for (Map.Entry<String, ? extends Serializable> param : params.entrySet()) {
+            intent.putExtra(param.getKey(), param.getValue());
+        }
+        base.startActivity(intent);
+    }
 }

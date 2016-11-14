@@ -9,14 +9,24 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.ababilo.pwd.pwdmanager.App;
 import com.ababilo.pwd.pwdmanager.R;
 import com.ababilo.pwd.pwdmanager.core.presenter.BasePresenter;
 import com.ababilo.pwd.pwdmanager.core.presenter.MainPresenter;
 import com.ababilo.pwd.pwdmanager.core.view.MainView;
+import com.ababilo.pwd.pwdmanager.model.Database;
+import com.ababilo.pwd.pwdmanager.model.Password;
+import com.ababilo.pwd.pwdmanager.util.ActivityUtil;
 import com.ababilo.pwd.pwdmanager.util.ListAdapterHolder;
+import com.ababilo.pwd.pwdmanager.util.OnItemClickListener;
+import com.ababilo.pwd.pwdmanager.util.PasswordForgetPolicyType;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+
+import java.util.Collections;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,6 +42,8 @@ public class MainActivity extends MoxyAppCompatActivity implements MainView {
 
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
+    private Database database;
+    private PasswordForgetPolicyType passwordForgetPolicyType;
 
     @InjectPresenter
     MainPresenter presenter;
@@ -40,7 +52,11 @@ public class MainActivity extends MoxyAppCompatActivity implements MainView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if (getIntent().getBooleanExtra("EXIT", false)) {
+            finish();
+        }
         attachInjector();
+        loadData();
 
         setSupportActionBar(toolbar);
         fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
@@ -55,8 +71,37 @@ public class MainActivity extends MoxyAppCompatActivity implements MainView {
         recyclerView.setLayoutManager(layoutManager);
 
         // specify an adapter
-        adapter = new ListAdapterHolder(this);
+        adapter = new ListAdapterHolder<Password, PasswordViewHolder>(this,
+                null != database ? database.getPasswords() : Collections.emptyList(), R.layout.password_list_item) {
+            @Override
+            public void onBindViewHolder(PasswordViewHolder holder, int position) {
+                holder.title.setText(list.get(position).getTitle());
+                holder.lastUsed.setText(new Date().toString());
+            }
+
+            @Override
+            protected PasswordViewHolder createViewHolder(View view, OnItemClickListener listener) {
+                return new PasswordViewHolder(view, listener);
+            }
+        };
         recyclerView.setAdapter(adapter);
+    }
+
+    private static class PasswordViewHolder extends ListAdapterHolder.ViewHolder {
+
+        TextView title;
+        TextView lastUsed;
+
+        PasswordViewHolder(View view, OnItemClickListener listener) {
+            super(view, listener);
+            this.title = (TextView) view.findViewById(R.id.password_title);
+            this.lastUsed = (TextView) view.findViewById(R.id.password_last_used);
+        }
+    }
+
+    private void loadData() {
+        database = (Database) getIntent().getSerializableExtra("DATABASE");
+        passwordForgetPolicyType = PasswordForgetPolicyType.fromInt(getIntent().getIntExtra("FORGET_POLICY", -1));
     }
 
     @Override
@@ -84,6 +129,7 @@ public class MainActivity extends MoxyAppCompatActivity implements MainView {
     }
 
     public void onSettingsClick(MenuItem item) {
+        ActivityUtil.loadActivity(this, SettingsActivity.class);
     }
 
     public void onExitClick(MenuItem item) {

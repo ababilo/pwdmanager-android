@@ -5,56 +5,55 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.ababilo.pwd.pwdmanager.R;
+import java.util.List;
 
 /**
  * Created by ababilo on 12.11.16.
  */
 
-public class ListAdapterHolder extends RecyclerView.Adapter<ListAdapterHolder.ViewHolder> {
+public abstract class ListAdapterHolder<T, E extends ListAdapterHolder.ViewHolder> extends RecyclerView.Adapter<E> {
 
     private final Activity context;
-    OnItemClickListener listener;
+    private OnItemClickListener listener;
+    protected List<T> list;
+    private int itemView;
 
-    public ListAdapterHolder(Activity context) {
+    public ListAdapterHolder(Activity context, List<T> list, int itemView) {
         this.context = context;
-        //createUserDetails();
+        this.list = list;
+        this.itemView = itemView;
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent , int viewType) {
+    public E onCreateViewHolder(ViewGroup parent , int viewType) {
         final LayoutInflater mInflater = LayoutInflater.from(parent.getContext());
-        final View sView = mInflater.inflate(R.layout.password_list_item, parent, false);
-        return new ViewHolder(sView, listener);
+        final View view = mInflater.inflate(itemView, parent, false);
+        return createViewHolder(view, listener);
     }
 
-    @Override
-    public void onBindViewHolder(ViewHolder holder , int position) {
-//        holder.vId.setText("ID: " + mUserDetails.get(position).getId());
-//        holder.vName.setText("Name: " + mUserDetails.get(position).getName());
-//        holder.vSex.setText("Sex: " + mUserDetails.get(position).getSex());
-//        holder.vAge.setText("Age: " + mUserDetails.get(position).getAge());
-    }
+    protected abstract E createViewHolder(View view, OnItemClickListener listener);
+//
+//    @Override
+//    public void onBindViewHolder(ViewHolder holder , int position) {
+////        holder.vId.setText("ID: " + mUserDetails.get(position).getId());
+////        holder.vName.setText("Name: " + mUserDetails.get(position).getName());
+////        holder.vSex.setText("Sex: " + mUserDetails.get(position).getSex());
+////        holder.vAge.setText("Age: " + mUserDetails.get(position).getAge());
+//    }
 
     @Override
     public int getItemCount() {
-        return 1;
+        return list.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static abstract class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        TextView vName, vSex, vId, vAge;
         OnItemClickListener listener;
 
         public ViewHolder(View view, OnItemClickListener listener) {
             super(view);
             this.listener = listener;
-//            vId = (TextView) view.findViewById(R.id.list_id);
-//            vName = (TextView) view.findViewById(R.id.list_name);
-//            vSex = (TextView) view.findViewById(R.id.list_sex);
-//            vAge = (TextView) view.findViewById(R.id.list_age);
             view.setOnClickListener(this);
         }
 
@@ -67,7 +66,7 @@ public class ListAdapterHolder extends RecyclerView.Adapter<ListAdapterHolder.Vi
 
     }
 
-    public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
-        this.listener = mItemClickListener;
+    public void setOnItemClickListener(final OnItemClickListener listener) {
+        this.listener = listener;
     }
 }

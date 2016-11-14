@@ -1,6 +1,9 @@
 package com.ababilo.pwd.pwdmanager;
 
+import com.ababilo.pwd.pwdmanager.ui.EnterPasswordActivity;
 import com.ababilo.pwd.pwdmanager.ui.MainActivity;
+import com.ababilo.pwd.pwdmanager.ui.SettingsActivity;
+import com.ababilo.pwd.pwdmanager.ui.SplashActivity;
 
 import javax.inject.Singleton;
 
@@ -14,4 +17,7 @@ import dagger.Component;
 public interface ViewComponent {
 
     void inject(MainActivity activity);
+    void inject(EnterPasswordActivity activity);
+    void inject(SettingsActivity activity);
+    void inject(SplashActivity activity);
 }

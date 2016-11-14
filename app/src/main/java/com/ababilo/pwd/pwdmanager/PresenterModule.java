@@ -2,6 +2,10 @@ package com.ababilo.pwd.pwdmanager;
 
 import android.content.Context;
 
+import com.ababilo.pwd.pwdmanager.service.DatabaseManager;
+import com.ababilo.pwd.pwdmanager.service.DatabaseManagerImpl;
+import com.ababilo.pwd.pwdmanager.service.ProtocolKeysProvider;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -24,5 +28,17 @@ public class PresenterModule {
     @Singleton
     Context context() {
         return context;
+    }
+
+    @Provides
+    @Singleton
+    DatabaseManager databaseManager(ProtocolKeysProvider keysProvider) {
+        return new DatabaseManagerImpl(keysProvider);
+    }
+
+    @Provides
+    @Singleton
+    ProtocolKeysProvider keysProvider() {
+        return () -> new byte[0];
     }
 }
