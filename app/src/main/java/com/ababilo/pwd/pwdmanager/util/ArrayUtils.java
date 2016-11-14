@@ -13,8 +13,10 @@ public class ArrayUtils {
 
         int position = 0;
         for (byte[] arr : arrays) {
-            System.arraycopy(arr, 0, result, position, arr.length);
-            position += arr.length;
+            if (null != arr) {
+                System.arraycopy(arr, 0, result, position, arr.length);
+                position += arr.length;
+            }
         }
         return result;
     }
@@ -22,7 +24,9 @@ public class ArrayUtils {
     private static int countArraysLength(byte[]... arrays) {
         int resLength = 0;
         for (byte[] arr : arrays) {
-            resLength += arr.length;
+            if (null != arr) {
+                resLength += arr.length;
+            }
         }
         return resLength;
     }

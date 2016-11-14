@@ -13,6 +13,7 @@ import com.ababilo.pwd.pwdmanager.core.presenter.EnterPasswordPresenter;
 import com.ababilo.pwd.pwdmanager.core.view.EnterPasswordView;
 import com.ababilo.pwd.pwdmanager.model.Database;
 import com.ababilo.pwd.pwdmanager.util.ActivityUtil;
+import com.ababilo.pwd.pwdmanager.util.PasswordForgetPolicyType;
 import com.ababilo.pwd.pwdmanager.util.PreferencesManager;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
@@ -30,12 +31,15 @@ public class EnterPasswordActivity extends MoxyAppCompatActivity implements Ente
     EnterPasswordPresenter presenter;
     PreferencesManager preferencesManager;
 
+    private PasswordForgetPolicyType passwordForgetPolicyType;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter_password);
         attachInjector();
         preferencesManager = new PreferencesManager(this);
+        passwordForgetPolicyType = PasswordForgetPolicyType.fromInt(getIntent().getIntExtra("FORGET_POLICY", -1));
     }
 
     @Override

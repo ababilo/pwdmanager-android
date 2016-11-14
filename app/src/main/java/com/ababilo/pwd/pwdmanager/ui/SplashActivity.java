@@ -33,8 +33,6 @@ public class SplashActivity extends MoxyAppCompatActivity implements SplashView 
         String password = preferencesManager.getString(PreferencesManager.Preference.DB_PASSWORD);
         String path = preferencesManager.getString(PreferencesManager.Preference.DB_PATH);
         presenter.checkPassword(password, path);
-
-        ActivityUtil.loadRootActivity(this, MainActivity.class);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.ababilo.pwd.pwdmanager.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -22,7 +23,6 @@ import com.ababilo.pwd.pwdmanager.model.Password;
 import com.ababilo.pwd.pwdmanager.util.ActivityUtil;
 import com.ababilo.pwd.pwdmanager.util.ListAdapterHolder;
 import com.ababilo.pwd.pwdmanager.util.OnItemClickListener;
-import com.ababilo.pwd.pwdmanager.util.PasswordForgetPolicyType;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import java.util.Collections;
@@ -40,10 +40,8 @@ public class MainActivity extends MoxyAppCompatActivity implements MainView {
     @BindView(R.id.MainActivity__list)
     RecyclerView recyclerView;
 
-    private RecyclerView.Adapter adapter;
-    private RecyclerView.LayoutManager layoutManager;
     private Database database;
-    private PasswordForgetPolicyType passwordForgetPolicyType;
+    private LedController ledController;
 
     @InjectPresenter
     MainPresenter presenter;
@@ -51,10 +49,11 @@ public class MainActivity extends MoxyAppCompatActivity implements MainView {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
         if (getIntent().getBooleanExtra("EXIT", false)) {
             finish();
+            return;
         }
+        setContentView(R.layout.activity_main);
         attachInjector();
         loadData();
 
@@ -67,12 +66,17 @@ public class MainActivity extends MoxyAppCompatActivity implements MainView {
         recyclerView.setHasFixedSize(true);
 
         // use a linear layout manager
-        layoutManager = new LinearLayoutManager(this);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
         // specify an adapter
-        adapter = new ListAdapterHolder<Password, PasswordViewHolder>(this,
+        RecyclerView.Adapter adapter = new ListAdapterHolder<Password, PasswordViewHolder>(
                 null != database ? database.getPasswords() : Collections.emptyList(), R.layout.password_list_item) {
+            @Override
+            public void onItemClick(View view, int position) {
+                presenter.sendPassword(database.getPasswords().get(position));
+            }
+
             @Override
             public void onBindViewHolder(PasswordViewHolder holder, int position) {
                 holder.title.setText(list.get(position).getTitle());
@@ -101,28 +105,16 @@ public class MainActivity extends MoxyAppCompatActivity implements MainView {
 
     private void loadData() {
         database = (Database) getIntent().getSerializableExtra("DATABASE");
-        passwordForgetPolicyType = PasswordForgetPolicyType.fromInt(getIntent().getIntExtra("FORGET_POLICY", -1));
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_settings:
-                return true;
-            case R.id.led_connected:
-                return true;
-            default:
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
-                return super.onOptionsItemSelected(item);
-        }
+        MenuItem led = menu.findItem(R.id.MainActivity__menu_led);
+        ledController = new LedController(this, led);
+        return true;
     }
 
     public void onLedClick(MenuItem item) {
@@ -133,6 +125,15 @@ public class MainActivity extends MoxyAppCompatActivity implements MainView {
     }
 
     public void onExitClick(MenuItem item) {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("EXIT", true);
+        startActivity(intent);
+    }
+
+    @Override
+    public void startSending() {
+        ledController.setState(LedController.State.WAITING);
     }
 
     @Override

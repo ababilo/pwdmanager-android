@@ -4,7 +4,7 @@
     tools:context=".MainActivity">
 
     <item
-        android:id="@+id/led_connected"
+        android:id="@+id/MainActivity__menu_led"
         android:title="@string/led_connected"
         android:icon="@drawable/ic_little_white"
         android:onClick="onLedClick"
@@ -13,27 +13,27 @@
 
 
     <item
-        android:id="@+id/action_connect_psd"
+        android:id="@+id/MainActivity__menu_connect_psd"
         android:title="@string/action_connect_psd"
         android:orderInCategory="100"
         android:onClick="onLedClick"
         app:showAsAction="never"/>
 
     <item
-        android:id="@+id/action_about"
+        android:id="@+id/MainActivity__menu_about"
         android:title="@string/action_about"
         android:orderInCategory="100"
         app:showAsAction="never"/>
 
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/MainActivity__menu_settings"
         android:title="@string/action_settings"
         android:onClick="onSettingsClick"
         android:orderInCategory="100"
         app:showAsAction="never"/>
 
     <item
-        android:id="@+id/action_exit"
+        android:id="@+id/MainActivity__menu_exit"
         android:title="@string/action_exit"
         android:onClick="onExitClick"
         android:orderInCategory="100"
