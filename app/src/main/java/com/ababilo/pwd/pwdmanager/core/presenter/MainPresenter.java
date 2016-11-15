@@ -59,11 +59,8 @@ public class MainPresenter extends BasePresenter<MainView> {
 
             @Override
             public void onUnknownReceived() {
-                getViewState().onDeviceError();
+                Log.w("DEVICE", "Unknown response");
             }
-        }).subscribe(
-                none -> getViewState().onDeviceConnected(),
-                throwable -> getViewState().onDeviceError()
-        );
+        }).flatMap(none -> protocolService.sendPing()).subscribe();
     }
 }

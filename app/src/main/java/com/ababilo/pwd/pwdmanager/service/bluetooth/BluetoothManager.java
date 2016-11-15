@@ -70,7 +70,7 @@ public class BluetoothManager {
 
                         //start receiving if available
                         if (dataAvailable) {
-                            observer.onDataReceive(IOUtils.toByteArray(in));
+                            observer.onDataReceive(IOUtils.toByteArray(in, in.available()));
                             if (Thread.currentThread().isInterrupted()) {
                                 return;
                             }

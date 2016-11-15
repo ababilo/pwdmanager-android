@@ -10,6 +10,8 @@ import com.ababilo.pwd.pwdmanager.service.bluetooth.BluetoothManager;
 import com.ababilo.pwd.pwdmanager.service.bluetooth.BluetoothObserver;
 import com.ababilo.pwd.pwdmanager.util.ObservableWrapper;
 
+import java.util.Arrays;
+
 import rx.Observable;
 
 /**
@@ -33,7 +35,7 @@ public class ProtocolServiceImpl implements ProtocolService {
             try {
                 ensureConnected();
                 bluetoothManager.sendData(Message.getBytes(new Message(Commands.PING)));
-                subscriber.onCompleted();
+                subscriber.onNext(null);
             } catch (Throwable th) {
                 subscriber.onError(th);
             }
@@ -53,7 +55,7 @@ public class ProtocolServiceImpl implements ProtocolService {
                 ensureConnected();
                 byte[] pack = protocol.sendPassword(password);
                 bluetoothManager.sendData(Message.getBytes(new Message(Commands.SEND_PASS, pack)));
-                subscriber.onCompleted();
+                subscriber.onNext(null);
             } catch (Throwable th) {
                 subscriber.onError(th);
             }
@@ -68,7 +70,7 @@ public class ProtocolServiceImpl implements ProtocolService {
                     connectInternal(mac, listener);
                 }
                 ensureConnected();
-                subscriber.onCompleted();
+                subscriber.onNext(null);
             } catch (Throwable th) {
                 subscriber.onError(th);
             }
@@ -104,6 +106,7 @@ public class ProtocolServiceImpl implements ProtocolService {
 
             @Override
             public void onDataReceive(byte[] data) {
+                Log.i("BT", "RECEIVED " + Arrays.toString(data));
                 if (null != data && data.length > 0) {
                     switch (Responses.fromByte(data[0])) {
                         case PONG: listener.onPongReceived(); break;
