@@ -4,12 +4,8 @@ import android.text.TextUtils;
 
 import com.ababilo.pwd.pwdmanager.App;
 import com.ababilo.pwd.pwdmanager.core.view.EnterPasswordView;
-import com.ababilo.pwd.pwdmanager.model.Database;
 import com.ababilo.pwd.pwdmanager.service.DatabaseManager;
 import com.arellomobile.mvp.InjectViewState;
-
-import java.util.Collections;
-import java.util.UUID;
 
 import javax.inject.Inject;
 
@@ -32,12 +28,10 @@ public class EnterPasswordPresenter extends BasePresenter<EnterPasswordView> {
             getViewState().onPasswordEmpty();
         }
 
-        getViewState().onDatabaseLoaded(new Database(UUID.randomUUID().toString(), Collections.emptyList()));
-
-//        databaseManager.loadDatabase(path, password)
-//                .subscribe(
-//                        database -> getViewState().onDatabaseLoaded(database),
-//                        th -> getViewState().onDatabaseError()
-//                );
+        databaseManager.loadDatabase(path, password)
+                .subscribe(
+                        database -> getViewState().onDatabaseLoaded(database),
+                        th -> getViewState().onDatabaseError()
+                );
     }
 }

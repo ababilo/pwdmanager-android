@@ -1,4 +1,4 @@
-package com.ababilo.pwd.pwdmanager.ui;
+package com.ababilo.pwd.pwdmanager.util;
 
 import android.content.Context;
 import android.view.MenuItem;

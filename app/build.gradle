@@ -61,4 +61,5 @@ dependencies {
     apt 'com.jakewharton:butterknife-compiler:8.0.1'
     provided 'javax.annotation:jsr250-api:1.0'
     compile 'org.apache.directory.studio:org.apache.commons.io:2.4'
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-beta3'
 }

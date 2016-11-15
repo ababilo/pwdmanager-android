@@ -12,4 +12,5 @@ public interface ProtocolService {
     Observable<Void> sendPing();
     Observable<Void> sendPassword(Password password);
     Observable<Void> connect(String mac, OnResponseReceived listener);
+    Observable<Password> addPassword(short id, String title, String password);
 }

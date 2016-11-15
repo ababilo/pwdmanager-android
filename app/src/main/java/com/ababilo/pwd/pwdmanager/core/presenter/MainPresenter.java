@@ -35,8 +35,7 @@ public class MainPresenter extends BasePresenter<MainView> {
         getViewState().startSending();
         protocolService.sendPassword(password)
                 .subscribe(
-                        none -> {
-                        },
+                        none -> {},
                         th -> {}
                 );
     }
@@ -44,6 +43,7 @@ public class MainPresenter extends BasePresenter<MainView> {
     public void connectDevice(String mac) {
         if (null == mac) {
             getViewState().onDeviceNotConnected();
+            return;
         }
         protocolService.connect(mac, new OnResponseReceived() {
             @Override

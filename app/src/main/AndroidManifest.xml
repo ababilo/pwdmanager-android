@@ -37,8 +37,13 @@
             android:theme="@style/AppTheme.Dialog" />
         <activity
             android:name=".ui.SettingsActivity"
-            android:label="@string/title_activity_settings" />
-        <activity android:name=".ui.SelectDeviceActivity"></activity>
+            android:label="@string/SettingsActivity__title" />
+        <activity
+            android:name=".ui.SelectDeviceActivity"
+            android:label="@string/SelectDeviceActivity__title"/>
+        <activity
+            android:name=".ui.AddPasswordActivity"
+            android:label="@string/AddPasswordActivity__title" />
     </application>
 
 </manifest>

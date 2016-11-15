@@ -23,9 +23,15 @@ public class SplashPresenter extends BasePresenter<SplashView> {
         App.getPresenterComponent().inject(this);
     }
 
-    public void checkPassword(String password, String path) {
+    public void checkDatabase(String password, String path) {
         if (TextUtils.isEmpty(password)) {
             getViewState().onPasswordNotFound();
+            return;
+        }
+
+        if (TextUtils.isEmpty(path)) {
+            getViewState().onPathEmpty();
+            return;
         }
 
         databaseManager.loadDatabase(path, password)

@@ -75,6 +75,21 @@ public class ProtocolServiceImpl implements ProtocolService {
         })).wrap();
     }
 
+    @Override
+    public Observable<Password> addPassword(short id, String title, String password) {
+        return new ObservableWrapper<Password>(Observable.create(subscriber -> {
+            try {
+                ensureConnected();
+                byte[] part1 = ProtocolKeysProvider.generateSecureBytes(128);
+                byte[] pack = protocol.addPassword(id, title, password, part1);
+                bluetoothManager.sendData(Message.getBytes(new Message(Commands.ADD_PASS, pack)));
+                subscriber.onNext(new Password(id, title, part1));
+            } catch (Throwable th) {
+                subscriber.onError(th);
+            }
+        })).wrap();
+    }
+
     private void connectInternal(String mac, OnResponseReceived listener) {
         bluetoothManager.connect(mac, new BluetoothObserver() {
             @Override

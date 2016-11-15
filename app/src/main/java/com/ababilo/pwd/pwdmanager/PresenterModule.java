@@ -36,8 +36,8 @@ public class PresenterModule {
 
     @Provides
     @Singleton
-    DatabaseManager databaseManager(ProtocolKeysProvider keysProvider) {
-        return new DatabaseManagerImpl(keysProvider);
+    DatabaseManager databaseManager() {
+        return new DatabaseManagerImpl();
     }
 
     @Provides

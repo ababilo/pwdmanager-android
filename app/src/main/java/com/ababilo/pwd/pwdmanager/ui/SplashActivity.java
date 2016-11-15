@@ -34,7 +34,7 @@ public class SplashActivity extends MoxyAppCompatActivity implements SplashView 
 
         String password = preferencesManager.getString(PreferencesManager.Preference.DB_PASSWORD);
         String path = preferencesManager.getString(PreferencesManager.Preference.DB_PATH);
-        presenter.checkPassword(password, path);
+        presenter.checkDatabase(password, path);
     }
 
     @Override
@@ -57,5 +57,10 @@ public class SplashActivity extends MoxyAppCompatActivity implements SplashView 
     public void onPasswordNotFound() {
         ActivityUtil.loadActivity(this, EnterPasswordActivity.class,
                 Collections.singletonMap("FORGET_POLICY", preferencesManager.getInt(PreferencesManager.Preference.FORGET_POLICY)));
+    }
+
+    @Override
+    public void onPathEmpty() {
+
     }
 }

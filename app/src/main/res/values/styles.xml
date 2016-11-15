@@ -74,8 +74,7 @@
 
     <style name="ButtonStyle.Borderless.ColoredText" parent="Widget.AppCompat.Button.Borderless.Colored" />
 
-    <style name="FloatingActionButtonStyle" parent="Widget.Design.FloatingActionButton">
-    </style>
+    <style name="FloatingActionButtonStyle" parent="Widget.Design.FloatingActionButton"></style>
 
     <style name="RadioButtonStyle" parent="Widget.AppCompat.CompoundButton.RadioButton" />
 
@@ -125,8 +124,7 @@
     <!-- Edit Text Styles -->
     <style name="EditTextStyle" parent="Widget.AppCompat.EditText" />
 
-    <style name="TextInputLayoutStyle" parent="Widget.Design.TextInputLayout">
-    </style>
+    <style name="TextInputLayoutStyle" parent="Widget.Design.TextInputLayout"></style>
 
     <!-- Spinner Styles -->
     <style name="SpinnerStyle" parent="Widget.AppCompat.Spinner" />

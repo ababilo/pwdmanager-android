@@ -10,12 +10,12 @@ public class Password implements Serializable {
 
     private short id;
     private String title;
-    private byte[] part1;
+    private byte[] part;
 
-    public Password(short id, String title, byte[] part1) {
+    public Password(short id, String title, byte[] part) {
         this.id = id;
         this.title = title;
-        this.part1 = part1;
+        this.part = part;
     }
 
     public short getId() {
@@ -34,11 +34,11 @@ public class Password implements Serializable {
         this.title = title;
     }
 
-    public byte[] getPart1() {
-        return part1;
+    public byte[] getPart() {
+        return part;
     }
 
-    public void setPart1(byte[] part1) {
-        this.part1 = part1;
+    public void setPart(byte[] part) {
+        this.part = part;
     }
 }

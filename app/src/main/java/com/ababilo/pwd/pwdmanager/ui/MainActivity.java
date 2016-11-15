@@ -1,9 +1,9 @@
 package com.ababilo.pwd.pwdmanager.ui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -21,6 +21,7 @@ import com.ababilo.pwd.pwdmanager.core.view.MainView;
 import com.ababilo.pwd.pwdmanager.model.Database;
 import com.ababilo.pwd.pwdmanager.model.Password;
 import com.ababilo.pwd.pwdmanager.util.ActivityUtil;
+import com.ababilo.pwd.pwdmanager.util.LedController;
 import com.ababilo.pwd.pwdmanager.util.ListAdapterHolder;
 import com.ababilo.pwd.pwdmanager.util.OnItemClickListener;
 import com.ababilo.pwd.pwdmanager.util.PreferencesManager;
@@ -64,8 +65,7 @@ public class MainActivity extends MoxyAppCompatActivity implements MainView {
         loadData();
 
         setSupportActionBar(toolbar);
-        fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show());
+        fab.setOnClickListener(v -> ActivityUtil.loadActivityForResult(self(), AddPasswordActivity.class, AddPasswordActivity.REQUEST_CODE));
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
@@ -123,6 +123,15 @@ public class MainActivity extends MoxyAppCompatActivity implements MainView {
         return true;
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == AddPasswordActivity.REQUEST_CODE && resultCode == RESULT_OK) {
+            Password password = (Password) data.getExtras().getSerializable("PASSWORD");
+            database.getPasswords().add(password);
+            recyclerView.getAdapter().notifyDataSetChanged();
+        }
+    }
+
     public void onLedClick(MenuItem item) {
         ledController.setState(LedController.State.WAITING);
         String mac = preferencesManager.getString(PreferencesManager.Preference.MAC);
@@ -169,5 +178,9 @@ public class MainActivity extends MoxyAppCompatActivity implements MainView {
     @Override
     protected BasePresenter getPresenter() {
         return presenter;
+    }
+
+    private Activity self() {
+        return this;
     }
 }

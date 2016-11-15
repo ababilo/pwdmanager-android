@@ -7,7 +7,8 @@ package com.ababilo.pwd.pwdmanager.model;
 public enum Commands {
 
     PING(0xFF),
-    SEND_PASS(0xAD);
+    SEND_PASS(0xAD),
+    ADD_PASS(0xDE);
 
     private byte type;
 

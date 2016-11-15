@@ -120,4 +120,9 @@ public class ActivityUtil {
         }
         base.startActivity(intent);
     }
+
+    public static void loadActivityForResult(Activity base, Class<? extends Activity> load, int requestCode) {
+        Intent intent = new Intent(base, load);
+        base.startActivityForResult(intent, requestCode);
+    }
 }

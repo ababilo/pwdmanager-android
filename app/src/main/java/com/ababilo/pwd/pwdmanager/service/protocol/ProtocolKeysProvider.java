@@ -42,7 +42,7 @@ public class ProtocolKeysProvider {
         return generateSecureBytes(32);
     }
 
-    private static byte[] generateSecureBytes(int length) {
+    public static byte[] generateSecureBytes(int length) {
         byte[] newBytes = new byte[length];
         sr.nextBytes(newBytes);
         return newBytes;

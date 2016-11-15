@@ -1,5 +1,6 @@
 package com.ababilo.pwd.pwdmanager;
 
+import com.ababilo.pwd.pwdmanager.ui.AddPasswordActivity;
 import com.ababilo.pwd.pwdmanager.ui.EnterPasswordActivity;
 import com.ababilo.pwd.pwdmanager.ui.MainActivity;
 import com.ababilo.pwd.pwdmanager.ui.SelectDeviceActivity;
@@ -22,4 +23,5 @@ public interface ViewComponent {
     void inject(SettingsActivity activity);
     void inject(SplashActivity activity);
     void inject(SelectDeviceActivity activity);
+    void inject(AddPasswordActivity activity);
 }
