@@ -7,6 +7,6 @@ package com.ababilo.pwd.pwdmanager.service.protocol;
 public interface OnResponseReceived {
 
     void onPongReceived();
-    void onResponseReceived();
+    void onResponseReceived(byte[] data);
     void onUnknownReceived();
 }

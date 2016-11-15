@@ -3,6 +3,7 @@ package com.ababilo.pwd.pwdmanager.service;
 import android.text.TextUtils;
 
 import com.ababilo.pwd.pwdmanager.model.Database;
+import com.ababilo.pwd.pwdmanager.service.protocol.ProtocolKeysProvider;
 import com.ababilo.pwd.pwdmanager.util.AESUtil;
 import com.ababilo.pwd.pwdmanager.util.HashUtils;
 import com.ababilo.pwd.pwdmanager.util.ObservableWrapper;

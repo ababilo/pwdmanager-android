@@ -2,6 +2,8 @@ package com.ababilo.pwd.pwdmanager;
 
 import android.content.Context;
 
+import com.ababilo.pwd.pwdmanager.util.PreferencesManager;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -24,5 +26,11 @@ public class ViewModule {
     @Singleton
     Context context() {
         return context;
+    }
+
+    @Provides
+    @Singleton
+    PreferencesManager preferencesManager() {
+        return new PreferencesManager(context);
     }
 }

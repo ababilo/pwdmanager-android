@@ -8,21 +8,21 @@ import java.io.Serializable;
 
 public class Password implements Serializable {
 
-    private int id;
+    private short id;
     private String title;
     private byte[] part1;
 
-    public Password(int id, String title, byte[] part1) {
+    public Password(short id, String title, byte[] part1) {
         this.id = id;
         this.title = title;
         this.part1 = part1;
     }
 
-    public int getId() {
+    public short getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(short id) {
         this.id = id;
     }
 

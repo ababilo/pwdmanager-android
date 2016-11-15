@@ -24,6 +24,8 @@ import com.ababilo.pwd.pwdmanager.util.PreferencesManager;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -35,7 +37,8 @@ public class SettingsActivity extends MoxyAppCompatPreferenceActivity {
     @BindView(R.id.SettingsActivity__toolbar)
     Toolbar toolbar;
 
-    private PreferencesManager preferencesManager;
+    @Inject
+    PreferencesManager preferencesManager;
 
     private static Preference.OnPreferenceChangeListener listener = (preference, value) -> {
         String stringValue = value.toString();
@@ -111,11 +114,8 @@ public class SettingsActivity extends MoxyAppCompatPreferenceActivity {
     @Override
     public void onBuildHeaders(List<Header> target) {
         loadHeadersFromResource(R.xml.pref_headers, target);
-
         setContentView(R.layout.activity_settings);
         attachInjector();
-
-        preferencesManager = new PreferencesManager(this);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -124,8 +124,7 @@ public class SettingsActivity extends MoxyAppCompatPreferenceActivity {
     protected boolean isValidFragment(String fragmentName) {
         return PreferenceFragment.class.getName().equals(fragmentName)
                 || GeneralPreferenceFragment.class.getName().equals(fragmentName)
-                || DataSyncPreferenceFragment.class.getName().equals(fragmentName)
-                || NotificationPreferenceFragment.class.getName().equals(fragmentName);
+                || DataSyncPreferenceFragment.class.getName().equals(fragmentName);
     }
 
     public static abstract class SettingsFragment extends PreferenceFragment {
@@ -160,10 +159,10 @@ public class SettingsActivity extends MoxyAppCompatPreferenceActivity {
 
         @Override
         public boolean onOptionsItemSelected(MenuItem item) {
-            int id = item.getItemId();
-            if (id == android.R.id.home) {
-                startActivity(new Intent(getActivity(), SettingsActivity.class));
-                return true;
+            switch (item.getItemId()) {
+                case android.R.id.home:
+                    getActivity().onBackPressed();
+                    return true;
             }
             return super.onOptionsItemSelected(item);
         }
@@ -201,28 +200,13 @@ public class SettingsActivity extends MoxyAppCompatPreferenceActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_general);
             setHasOptionsMenu(true);
-
-            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-            // to their values. When their values change, their summaries are
-            // updated to reflect the new value, per the Android Design
-            // guidelines.
-            bindPreferenceSummaryToValue(findPreference("example_text"));
-            bindPreferenceSummaryToValue(findPreference("example_list"));
         }
-    }
 
-    public static class NotificationPreferenceFragment extends SettingsFragment {
         @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_notification);
-            setHasOptionsMenu(true);
-
-            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-            // to their values. When their values change, their summaries are
-            // updated to reflect the new value, per the Android Design
-            // guidelines.
-            bindPreferenceSummaryToValue(findPreference("notifications_new_message_ringtone"));
+        public void onResume() {
+            super.onResume();
+            bindPreferenceSummaryToValue(findPreference(PreferencesManager.Preference.DB_PATH.name()));
+            bindPreferenceSummaryToValue(findPreference(PreferencesManager.Preference.MAC.name()));
         }
     }
 

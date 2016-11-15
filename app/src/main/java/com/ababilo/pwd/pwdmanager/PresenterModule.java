@@ -4,8 +4,9 @@ import android.content.Context;
 
 import com.ababilo.pwd.pwdmanager.service.DatabaseManager;
 import com.ababilo.pwd.pwdmanager.service.DatabaseManagerImpl;
-import com.ababilo.pwd.pwdmanager.service.ProtocolKeysProvider;
 import com.ababilo.pwd.pwdmanager.service.bluetooth.BluetoothManager;
+import com.ababilo.pwd.pwdmanager.service.protocol.Protocol;
+import com.ababilo.pwd.pwdmanager.service.protocol.ProtocolKeysProvider;
 import com.ababilo.pwd.pwdmanager.service.protocol.ProtocolService;
 import com.ababilo.pwd.pwdmanager.service.protocol.ProtocolServiceImpl;
 
@@ -42,7 +43,7 @@ public class PresenterModule {
     @Provides
     @Singleton
     ProtocolKeysProvider keysProvider() {
-        return () -> new byte[0];
+        return new ProtocolKeysProvider();
     }
 
     @Provides
@@ -53,7 +54,13 @@ public class PresenterModule {
 
     @Provides
     @Singleton
-    ProtocolService protocolService(BluetoothManager bluetoothManager, ProtocolKeysProvider keysProvider) {
-        return new ProtocolServiceImpl(bluetoothManager, keysProvider);
+    Protocol protocol(ProtocolKeysProvider keysProvider) {
+        return new Protocol(keysProvider);
+    }
+
+    @Provides
+    @Singleton
+    ProtocolService protocolService(BluetoothManager bluetoothManager, Protocol protocol) {
+        return new ProtocolServiceImpl(bluetoothManager, protocol);
     }
 }

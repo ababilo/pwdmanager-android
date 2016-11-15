@@ -29,14 +29,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.EnterPasswordActivity"
+        <activity
+            android:name=".ui.EnterPasswordActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:excludeFromRecents="true"
             android:label="@string/EnterPasswordActivity__title"
-            android:theme="@style/AppTheme.Dialog"/>
+            android:theme="@style/AppTheme.Dialog" />
         <activity
             android:name=".ui.SettingsActivity"
             android:label="@string/title_activity_settings" />
+        <activity android:name=".ui.SelectDeviceActivity"></activity>
     </application>
 
 </manifest>

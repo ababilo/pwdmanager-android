@@ -14,10 +14,13 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import java.util.Collections;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 
 public class SplashActivity extends MoxyAppCompatActivity implements SplashView {
 
+    @Inject
     PreferencesManager preferencesManager;
 
     @InjectPresenter
@@ -29,7 +32,6 @@ public class SplashActivity extends MoxyAppCompatActivity implements SplashView 
         setContentView(R.layout.activity_splash);
         attachInjector();
 
-        preferencesManager = new PreferencesManager(this);
         String password = preferencesManager.getString(PreferencesManager.Preference.DB_PASSWORD);
         String path = preferencesManager.getString(PreferencesManager.Preference.DB_PATH);
         presenter.checkPassword(password, path);

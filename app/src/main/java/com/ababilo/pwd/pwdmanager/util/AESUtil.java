@@ -29,7 +29,7 @@ public class AESUtil {
         return newBytes;
     }
 
-    private static byte[] generateIV() {
+    public static byte[] generateIV() {
         return generateSecureBytes(16);
     }
 

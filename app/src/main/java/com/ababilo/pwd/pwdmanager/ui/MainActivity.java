@@ -23,10 +23,13 @@ import com.ababilo.pwd.pwdmanager.model.Password;
 import com.ababilo.pwd.pwdmanager.util.ActivityUtil;
 import com.ababilo.pwd.pwdmanager.util.ListAdapterHolder;
 import com.ababilo.pwd.pwdmanager.util.OnItemClickListener;
+import com.ababilo.pwd.pwdmanager.util.PreferencesManager;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import java.util.Collections;
 import java.util.Date;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,6 +45,9 @@ public class MainActivity extends MoxyAppCompatActivity implements MainView {
 
     private Database database;
     private LedController ledController;
+
+    @Inject
+    PreferencesManager preferencesManager;
 
     @InjectPresenter
     MainPresenter presenter;
@@ -118,6 +124,9 @@ public class MainActivity extends MoxyAppCompatActivity implements MainView {
     }
 
     public void onLedClick(MenuItem item) {
+        ledController.setState(LedController.State.WAITING);
+        String mac = preferencesManager.getString(PreferencesManager.Preference.MAC);
+        presenter.connectDevice(mac);
     }
 
     public void onSettingsClick(MenuItem item) {
@@ -134,6 +143,21 @@ public class MainActivity extends MoxyAppCompatActivity implements MainView {
     @Override
     public void startSending() {
         ledController.setState(LedController.State.WAITING);
+    }
+
+    @Override
+    public void onDeviceConnected() {
+        ledController.setState(LedController.State.CONNECTED);
+    }
+
+    @Override
+    public void onDeviceError() {
+        ledController.setState(LedController.State.ERROR);
+    }
+
+    @Override
+    public void onDeviceNotConnected() {
+        ActivityUtil.loadActivity(this, SelectDeviceActivity.class);
     }
 
     @Override

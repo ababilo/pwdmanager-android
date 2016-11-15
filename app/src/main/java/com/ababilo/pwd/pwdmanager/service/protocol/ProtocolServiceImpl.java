@@ -6,7 +6,6 @@ import com.ababilo.pwd.pwdmanager.model.Commands;
 import com.ababilo.pwd.pwdmanager.model.Message;
 import com.ababilo.pwd.pwdmanager.model.Password;
 import com.ababilo.pwd.pwdmanager.model.Responses;
-import com.ababilo.pwd.pwdmanager.service.ProtocolKeysProvider;
 import com.ababilo.pwd.pwdmanager.service.bluetooth.BluetoothManager;
 import com.ababilo.pwd.pwdmanager.service.bluetooth.BluetoothObserver;
 import com.ababilo.pwd.pwdmanager.util.ObservableWrapper;
@@ -20,12 +19,12 @@ import rx.Observable;
 public class ProtocolServiceImpl implements ProtocolService {
 
     private BluetoothManager bluetoothManager;
-    private ProtocolKeysProvider keysProvider;
+    private Protocol protocol;
 
     public ProtocolServiceImpl(BluetoothManager bluetoothManager,
-                               ProtocolKeysProvider keysProvider) {
+                               Protocol protocol) {
         this.bluetoothManager = bluetoothManager;
-        this.keysProvider = keysProvider;
+        this.protocol = protocol;
     }
 
     @Override
@@ -52,7 +51,8 @@ public class ProtocolServiceImpl implements ProtocolService {
         return new ObservableWrapper<Void>(Observable.create(subscriber -> {
             try {
                 ensureConnected();
-                //bluetoothManager.sendData(Message.getBytes(new Message(Commands.PING)));
+                byte[] pack = protocol.sendPassword(password);
+                bluetoothManager.sendData(Message.getBytes(new Message(Commands.SEND_PASS, pack)));
                 subscriber.onCompleted();
             } catch (Throwable th) {
                 subscriber.onError(th);
@@ -67,6 +67,7 @@ public class ProtocolServiceImpl implements ProtocolService {
                 if (!bluetoothManager.isConnected()) {
                     connectInternal(mac, listener);
                 }
+                ensureConnected();
                 subscriber.onCompleted();
             } catch (Throwable th) {
                 subscriber.onError(th);
@@ -91,7 +92,7 @@ public class ProtocolServiceImpl implements ProtocolService {
                 if (null != data && data.length > 0) {
                     switch (Responses.fromByte(data[0])) {
                         case PONG: listener.onPongReceived(); break;
-                        case RESPONSE: listener.onResponseReceived(); break;
+                        case RESPONSE: listener.onResponseReceived(data); break;
                         case UNKNOWN: listener.onUnknownReceived(); break;
                     }
                 }

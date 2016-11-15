@@ -1,10 +1,15 @@
 package com.ababilo.pwd.pwdmanager.core.presenter;
 
+import android.util.Log;
+
 import com.ababilo.pwd.pwdmanager.App;
 import com.ababilo.pwd.pwdmanager.core.view.MainView;
 import com.ababilo.pwd.pwdmanager.model.Password;
+import com.ababilo.pwd.pwdmanager.service.protocol.OnResponseReceived;
 import com.ababilo.pwd.pwdmanager.service.protocol.ProtocolService;
 import com.arellomobile.mvp.InjectViewState;
+
+import java.util.Arrays;
 
 import javax.inject.Inject;
 
@@ -34,5 +39,31 @@ public class MainPresenter extends BasePresenter<MainView> {
                         },
                         th -> {}
                 );
+    }
+
+    public void connectDevice(String mac) {
+        if (null == mac) {
+            getViewState().onDeviceNotConnected();
+        }
+        protocolService.connect(mac, new OnResponseReceived() {
+            @Override
+            public void onPongReceived() {
+                getViewState().onDeviceConnected();
+            }
+
+            @Override
+            public void onResponseReceived(byte[] data) {
+                // todo process
+                Log.i("BT Response", Arrays.toString(data));
+            }
+
+            @Override
+            public void onUnknownReceived() {
+                getViewState().onDeviceError();
+            }
+        }).subscribe(
+                none -> getViewState().onDeviceConnected(),
+                throwable -> getViewState().onDeviceError()
+        );
     }
 }

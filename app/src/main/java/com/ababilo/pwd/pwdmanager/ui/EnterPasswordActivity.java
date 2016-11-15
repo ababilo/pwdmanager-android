@@ -19,6 +19,8 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import java.util.Collections;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -29,6 +31,7 @@ public class EnterPasswordActivity extends MoxyAppCompatActivity implements Ente
 
     @InjectPresenter
     EnterPasswordPresenter presenter;
+    @Inject
     PreferencesManager preferencesManager;
 
     private PasswordForgetPolicyType passwordForgetPolicyType;
@@ -38,7 +41,6 @@ public class EnterPasswordActivity extends MoxyAppCompatActivity implements Ente
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter_password);
         attachInjector();
-        preferencesManager = new PreferencesManager(this);
         passwordForgetPolicyType = PasswordForgetPolicyType.fromInt(getIntent().getIntExtra("FORGET_POLICY", -1));
     }
 

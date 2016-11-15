@@ -82,6 +82,8 @@ public class BluetoothManager {
                     }
                 }
             });
+
+            connected = true;
         } catch (IOException e) {
             connected = false;
             observer.onConnectError(e);
@@ -93,8 +95,6 @@ public class BluetoothManager {
                 }
             }
         }
-
-        connected = true;
     }
 
     public void disconnect() {

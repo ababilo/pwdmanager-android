@@ -11,4 +11,7 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 public interface MainView extends BaseView {
 
     void startSending();
+    void onDeviceConnected();
+    void onDeviceError();
+    void onDeviceNotConnected();
 }
