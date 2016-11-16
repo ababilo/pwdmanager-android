@@ -10,8 +10,6 @@ import com.arellomobile.mvp.InjectViewState;
 
 import javax.inject.Inject;
 
-import rx.Observable;
-
 /**
  * Created by ababilo on 12.11.16.
  */
@@ -48,7 +46,8 @@ public class MainPresenter extends BasePresenter<MainView> {
             getViewState().onDeviceNotConnected();
             return;
         }
-        Observable.concat(protocolService.connect(mac, observer), protocolService.sendPing())
+        protocolService.connect(mac, observer)
+                .flatMap(none -> protocolService.sendPing())
                 .subscribe(
                         none -> getViewState().onDeviceConnected(),
                         throwable -> getViewState().onDeviceError()

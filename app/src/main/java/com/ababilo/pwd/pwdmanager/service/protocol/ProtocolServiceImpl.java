@@ -11,6 +11,7 @@ import com.ababilo.pwd.pwdmanager.service.bluetooth.BluetoothObserver;
 import com.ababilo.pwd.pwdmanager.util.ObservableWrapper;
 
 import java.util.Arrays;
+import java.util.List;
 
 import rx.Observable;
 
@@ -33,10 +34,12 @@ public class ProtocolServiceImpl implements ProtocolService {
     public Observable<Void> sendPing() {
         return new ObservableWrapper<Void>(Observable.create(subscriber -> {
             try {
+                Log.i("PROTOCOL", "Started ping");
                 ensureConnected();
                 bluetoothManager.sendData(Message.getBytes(new Message(Commands.PING)));
                 subscriber.onNext(null);
             } catch (Throwable th) {
+                Log.e("PROTOCOL", "Ping error", th);
                 subscriber.onError(th);
             }
         })).wrap();
@@ -66,12 +69,14 @@ public class ProtocolServiceImpl implements ProtocolService {
     public Observable<Void> connect(String mac, OnResponseReceived listener) {
         return new ObservableWrapper<Void>(Observable.create(subscriber -> {
             try {
+                Log.i("PROTOCOL", "Started connect");
                 if (!bluetoothManager.isConnected()) {
                     connectInternal(mac, listener);
                 }
                 ensureConnected();
                 subscriber.onNext(null);
             } catch (Throwable th) {
+                Log.e("PROTOCOL", "Connect error", th);
                 subscriber.onError(th);
             }
         })).wrap();
@@ -103,6 +108,24 @@ public class ProtocolServiceImpl implements ProtocolService {
                 Log.i("PROTOCOL", "REQUESTED BACKUP " + Arrays.toString(pack));
                 subscriber.onNext(null);
             } catch (Throwable th) {
+                Log.e("PROTOCOL", "Request backup error", th);
+                subscriber.onError(th);
+            }
+        })).wrap();
+    }
+
+    @Override
+    public Observable<Void> sendBackup(List<Password> passwords) {
+        return new ObservableWrapper<Void>(Observable.create(subscriber -> {
+            try {
+                Log.d("PROTOCOL", "Backup send started");
+                ensureConnected();
+                byte[] pack = protocol.sendBackup(passwords);
+                bluetoothManager.sendData(Message.getBytes(new Message(Commands.SEND_BACKUP, pack)));
+                Log.i("PROTOCOL", "SENT BACKUP " + Arrays.toString(pack));
+                subscriber.onNext(null);
+            } catch (Throwable th) {
+                Log.e("PROTOCOL", "Send backup error", th);
                 subscriber.onError(th);
             }
         })).wrap();

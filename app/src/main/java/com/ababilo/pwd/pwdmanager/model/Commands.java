@@ -9,7 +9,8 @@ public enum Commands {
     PING(0xFF),
     SEND_PASS(0xAD),
     ADD_PASS(0xDE),
-    REQUEST_BACKUP(0xAB);
+    REQUEST_BACKUP(0xAB),
+    SEND_BACKUP(0xAC);
 
     private byte type;
 

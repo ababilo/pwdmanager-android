@@ -60,10 +60,10 @@ public class DatabaseManagerImpl implements DatabaseManager {
             } catch (Exception e) {
                 subscriber.onError(e);
             }
-        }).doOnNext(database -> cached = database)
-                .doOnNext(database -> keysProvider.loadKeys(database.getBtKey(), database.getHbtKey()));
+        }).doOnNext(database -> cached = database);
 
-        return new ObservableWrapper<>(Observable.concat(memory, file).first(database -> null != database)).wrap();
+        return new ObservableWrapper<>(Observable.concat(memory, file).first(database -> null != database)
+                .doOnNext(database -> keysProvider.loadKeys(database.getBtKey(), database.getHbtKey()))).wrap();
     }
 
     @Override

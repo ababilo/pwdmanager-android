@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.ababilo.pwd.pwdmanager.api.ClientFactory;
 import com.ababilo.pwd.pwdmanager.api.TrustedServiceClient;
+import com.ababilo.pwd.pwdmanager.service.BackupService;
+import com.ababilo.pwd.pwdmanager.service.BackupServiceImpl;
 import com.ababilo.pwd.pwdmanager.service.DatabaseManager;
 import com.ababilo.pwd.pwdmanager.service.DatabaseManagerImpl;
 import com.ababilo.pwd.pwdmanager.service.bluetooth.BluetoothManager;
@@ -93,7 +95,13 @@ public class PresenterModule {
 
     @Provides
     @Singleton
-    OnResponseReceived observer(DatabaseManager databaseManager, ProtocolKeysProvider keysProvider, Gson gson, TrustedServiceClient client) {
-        return new ProtocolObserver(databaseManager, keysProvider, gson, client);
+    OnResponseReceived observer(ProtocolKeysProvider keysProvider, BackupService backupService) {
+        return new ProtocolObserver(keysProvider, backupService);
+    }
+
+    @Provides
+    @Singleton
+    BackupService backupService(DatabaseManager databaseManager, ProtocolKeysProvider keysProvider, Gson gson, TrustedServiceClient client) {
+        return new BackupServiceImpl(databaseManager, keysProvider, gson, client);
     }
 }

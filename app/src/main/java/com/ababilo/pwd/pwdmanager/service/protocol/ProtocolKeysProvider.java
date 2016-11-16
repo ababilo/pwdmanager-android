@@ -1,5 +1,7 @@
 package com.ababilo.pwd.pwdmanager.service.protocol;
 
+import android.util.Log;
+
 import com.ababilo.pwd.pwdmanager.util.ArrayUtils;
 
 import java.security.SecureRandom;
@@ -27,11 +29,13 @@ public class ProtocolKeysProvider {
     }
 
     public synchronized void loadKeys(byte[] btKey, byte[] htbKey) {
+        Log.i("KEYS", "loadKeys");
         this.currentBTKey = btKey;
         this.currentHBTKEy = htbKey;
     }
 
     public synchronized void rollKeys() {
+        Log.i("KEYS", "rollKeys");
         currentBTKey = nextBTKey;
         currentHBTKEy = nextHBTKey;
     }

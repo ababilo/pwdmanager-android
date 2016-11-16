@@ -141,7 +141,7 @@ public class SettingsActivity extends MoxyAppCompatPreferenceActivity implements
     }
 
     public void onRestoreBackupClick() {
-        // todo
+        presenter.restoreBackup();
     }
 
     @Override

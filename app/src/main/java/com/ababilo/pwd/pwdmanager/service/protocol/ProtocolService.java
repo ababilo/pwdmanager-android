@@ -2,6 +2,8 @@ package com.ababilo.pwd.pwdmanager.service.protocol;
 
 import com.ababilo.pwd.pwdmanager.model.Password;
 
+import java.util.List;
+
 import rx.Observable;
 
 /**
@@ -14,4 +16,5 @@ public interface ProtocolService {
     Observable<Void> connect(String mac, OnResponseReceived listener);
     Observable<Password> addPassword(short id, String title, String password);
     Observable<Void> requestBackup(String clientId);
+    Observable<Void> sendBackup(List<Password> passwords);
 }

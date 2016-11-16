@@ -8,6 +8,8 @@ import com.ababilo.pwd.pwdmanager.util.ShortUtil;
 
 import org.apache.commons.io.Charsets;
 
+import java.util.List;
+
 /**
  * Created by ababilo on 15.11.16.
  */
@@ -45,5 +47,13 @@ public class Protocol {
         byte[] signature = HashUtils.hmacSha256(encrypted, keysProvider.getCurrentHBTKEy());
 
         return ArrayUtils.concatArrays(encrypted, signature); // iv + encrypted + signature
+    }
+
+    public byte[] sendBackup(List<Password> passwords) {
+        byte[] data = new byte[0];
+        for (Password password : passwords) {
+            data = ArrayUtils.concatArrays(data, ArrayUtils.concatArrays(ShortUtil.getShortBytes(password.getId()), password.getPart()));
+        }
+        return encryptPack(data);
     }
 }
