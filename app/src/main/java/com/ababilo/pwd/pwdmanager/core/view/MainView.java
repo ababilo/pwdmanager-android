@@ -1,5 +1,6 @@
 package com.ababilo.pwd.pwdmanager.core.view;
 
+import com.ababilo.pwd.pwdmanager.model.Database;
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
@@ -14,4 +15,5 @@ public interface MainView extends BaseView {
     void onDeviceConnected();
     void onDeviceError();
     void onDeviceNotConnected();
+    void onDatabaseLoaded(Database database);
 }

@@ -22,12 +22,7 @@ public class Protocol {
 
     public byte[] sendPassword(Password password) {
         byte[] data = ArrayUtils.concatArrays(ShortUtil.getShortBytes(password.getId()), password.getPart());
-        byte[] payload = keysProvider.appendNextKeys(data);
-
-        byte[] encrypted = AESUtil.encrypt(payload, keysProvider.getCurrentBTKey());
-        byte[] signature = HashUtils.hmacSha256(encrypted, keysProvider.getCurrentHBTKEy());
-
-        return ArrayUtils.concatArrays(encrypted, signature); // iv + encrypted + signature
+        return encryptPack(data);
     }
 
     public byte[] addPassword(short id, String title, String password, byte[] randomPart) {
@@ -37,5 +32,18 @@ public class Protocol {
             part2[i] = (byte) (passwordBytes[i] ^ randomPart[i]);
         }
         return sendPassword(new Password(id, title, part2));
+    }
+
+    public byte[] requestBackup(String clientId) {
+        return encryptPack(clientId.getBytes(Charsets.US_ASCII));
+    }
+
+    private byte[] encryptPack(byte[] data) {
+        byte[] payload = keysProvider.appendNextKeys(data);
+
+        byte[] encrypted = AESUtil.encrypt(payload, keysProvider.getCurrentBTKey());
+        byte[] signature = HashUtils.hmacSha256(encrypted, keysProvider.getCurrentHBTKEy());
+
+        return ArrayUtils.concatArrays(encrypted, signature); // iv + encrypted + signature
     }
 }

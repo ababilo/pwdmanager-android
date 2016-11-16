@@ -32,8 +32,6 @@ import butterknife.ButterKnife;
 
 public class SelectDeviceActivity extends MoxyAppCompatActivity {
 
-    private static final int REQUEST_ENABLE_BT = 3433;
-
     @BindView(R.id.SelectDeviceActivity__toolbar)
     Toolbar toolbar;
     @BindView(R.id.SelectDeviceActivity__list)
@@ -76,6 +74,7 @@ public class SelectDeviceActivity extends MoxyAppCompatActivity {
             }
         };
         list.setAdapter(adapter);
+        fillPairedDevices();
     }
 
     private static class DeviceViewHolder extends ListAdapterHolder.ViewHolder {
@@ -110,7 +109,7 @@ public class SelectDeviceActivity extends MoxyAppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        fillPairedDevices();
+        //fillPairedDevices();
     }
 
     @Override
@@ -126,7 +125,7 @@ public class SelectDeviceActivity extends MoxyAppCompatActivity {
     private void fillPairedDevices() {
         if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+            startActivityForResult(enableBtIntent, MainActivity.REQUEST_ENABLE_BT);
         } else {
             fillDevices();
         }

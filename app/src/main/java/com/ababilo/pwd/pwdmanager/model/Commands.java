@@ -8,7 +8,8 @@ public enum Commands {
 
     PING(0xFF),
     SEND_PASS(0xAD),
-    ADD_PASS(0xDE);
+    ADD_PASS(0xDE),
+    REQUEST_BACKUP(0xAB);
 
     private byte type;
 

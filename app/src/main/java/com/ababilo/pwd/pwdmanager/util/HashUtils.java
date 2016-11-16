@@ -5,7 +5,6 @@ import android.util.Base64;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 
 import javax.crypto.Mac;
@@ -24,16 +23,20 @@ public class HashUtils {
         return Base64.encodeToString(sha256Bytes(input.getBytes()), Base64.DEFAULT);
     }
 
-    public static byte[] PBKDF2(char[] input, byte[] salt) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    public static byte[] PBKDF2(char[] input, byte[] salt) {
         final int iterations = 10000;
 
         // Generate a 256-bit key
         final int outputKeyLength = 256;
 
-        SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-        KeySpec keySpec = new PBEKeySpec(input, salt, iterations, outputKeyLength);
-        SecretKey secretKey = secretKeyFactory.generateSecret(keySpec);
-        return secretKey.getEncoded();
+        try {
+            SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+            KeySpec keySpec = new PBEKeySpec(input, salt, iterations, outputKeyLength);
+            SecretKey secretKey = secretKeyFactory.generateSecret(keySpec);
+            return secretKey.getEncoded();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
 

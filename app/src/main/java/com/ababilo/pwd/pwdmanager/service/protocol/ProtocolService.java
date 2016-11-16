@@ -13,4 +13,5 @@ public interface ProtocolService {
     Observable<Void> sendPassword(Password password);
     Observable<Void> connect(String mac, OnResponseReceived listener);
     Observable<Password> addPassword(short id, String title, String password);
+    Observable<Void> requestBackup(String clientId);
 }

@@ -25,7 +25,7 @@ public class AddPasswordPresenter extends BasePresenter<AddPasswordView> {
     }
 
     public void addPassword(String title, String password) {
-        databaseManager.loadDatabase(null, null)
+        databaseManager.getDatabase()
                 .flatMap(database -> protocolService.addPassword((short) database.getPasswords().size(), title, password))
                 .subscribe(
                         pwd -> getViewState().onSuccessful(pwd),

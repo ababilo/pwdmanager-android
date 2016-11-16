@@ -3,6 +3,7 @@ package com.ababilo.pwd.pwdmanager;
 import com.ababilo.pwd.pwdmanager.core.presenter.AddPasswordPresenter;
 import com.ababilo.pwd.pwdmanager.core.presenter.EnterPasswordPresenter;
 import com.ababilo.pwd.pwdmanager.core.presenter.MainPresenter;
+import com.ababilo.pwd.pwdmanager.core.presenter.SettingsPresenter;
 import com.ababilo.pwd.pwdmanager.core.presenter.SplashPresenter;
 
 import javax.inject.Singleton;
@@ -20,4 +21,5 @@ public interface PresenterComponent {
     void inject(SplashPresenter presenter);
     void inject(EnterPasswordPresenter presenter);
     void inject(AddPasswordPresenter presenter);
+    void inject(SettingsPresenter presenter);
 }

@@ -30,4 +30,23 @@ public class ArrayUtils {
         }
         return resLength;
     }
+
+    public static byte[] truncateZeros(byte[] data) {
+        int length = countDataLength(data);
+        byte[] dataOnly = new byte[length];
+        System.arraycopy(data, 0, dataOnly, 0, length);
+        return dataOnly;
+    }
+
+    private static int countDataLength(byte[] data) {
+        int resLength = 0;
+        for (byte b : data) {
+            if (b != 0) {
+                resLength++;
+            } else {
+                break;
+            }
+        }
+        return resLength;
+    }
 }

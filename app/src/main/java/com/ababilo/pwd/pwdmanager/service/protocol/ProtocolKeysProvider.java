@@ -26,6 +26,11 @@ public class ProtocolKeysProvider {
         return currentHBTKEy;
     }
 
+    public synchronized void loadKeys(byte[] btKey, byte[] htbKey) {
+        this.currentBTKey = btKey;
+        this.currentHBTKEy = htbKey;
+    }
+
     public synchronized void rollKeys() {
         currentBTKey = nextBTKey;
         currentHBTKEy = nextHBTKey;

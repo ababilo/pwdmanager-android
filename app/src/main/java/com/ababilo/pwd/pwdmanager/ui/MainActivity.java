@@ -1,6 +1,7 @@
 package com.ababilo.pwd.pwdmanager.ui;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -36,6 +37,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends MoxyAppCompatActivity implements MainView {
+
+    public static final int REQUEST_ENABLE_BT = 3433;
 
     @BindView(R.id.MainActivity__toolbar)
     Toolbar toolbar;
@@ -111,6 +114,9 @@ public class MainActivity extends MoxyAppCompatActivity implements MainView {
 
     private void loadData() {
         database = (Database) getIntent().getSerializableExtra("DATABASE");
+        if (null == database) {
+            presenter.loadDatabase();
+        }
     }
 
     @Override
@@ -134,6 +140,10 @@ public class MainActivity extends MoxyAppCompatActivity implements MainView {
 
     public void onLedClick(MenuItem item) {
         ledController.setState(LedController.State.WAITING);
+        if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+        }
         String mac = preferencesManager.getString(PreferencesManager.Preference.MAC);
         presenter.connectDevice(mac);
     }
@@ -167,6 +177,13 @@ public class MainActivity extends MoxyAppCompatActivity implements MainView {
     @Override
     public void onDeviceNotConnected() {
         ActivityUtil.loadActivity(this, SelectDeviceActivity.class);
+    }
+
+    @Override
+    public void onDatabaseLoaded(Database database) {
+        this.database.getPasswords().clear();
+        this.database.getPasswords().addAll(database.getPasswords());
+        recyclerView.getAdapter().notifyDataSetChanged();
     }
 
     @Override

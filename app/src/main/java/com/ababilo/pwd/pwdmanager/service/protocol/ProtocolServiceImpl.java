@@ -92,6 +92,22 @@ public class ProtocolServiceImpl implements ProtocolService {
         })).wrap();
     }
 
+    @Override
+    public Observable<Void> requestBackup(String clientId) {
+        return new ObservableWrapper<Void>(Observable.create(subscriber -> {
+            try {
+                Log.d("PROTOCOL", "Backup request started");
+                ensureConnected();
+                byte[] pack = protocol.requestBackup(clientId);
+                bluetoothManager.sendData(Message.getBytes(new Message(Commands.REQUEST_BACKUP, pack)));
+                Log.i("PROTOCOL", "REQUESTED BACKUP " + Arrays.toString(pack));
+                subscriber.onNext(null);
+            } catch (Throwable th) {
+                subscriber.onError(th);
+            }
+        })).wrap();
+    }
+
     private void connectInternal(String mac, OnResponseReceived listener) {
         bluetoothManager.connect(mac, new BluetoothObserver() {
             @Override
@@ -111,6 +127,7 @@ public class ProtocolServiceImpl implements ProtocolService {
                     switch (Responses.fromByte(data[0])) {
                         case PONG: listener.onPongReceived(); break;
                         case RESPONSE: listener.onResponseReceived(data); break;
+                        case BACKUP: listener.onBackupReceived(data); break;
                         case UNKNOWN: listener.onUnknownReceived(); break;
                     }
                 }

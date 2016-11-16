@@ -13,7 +13,9 @@ public class PreferencesManager {
     public enum Preference {
         DB_PASSWORD,
         DB_PATH,
-        MAC, FORGET_POLICY
+        MAC, FORGET_POLICY,
+        LAST_BACKUP_CREATED,
+        LAST_BACKUP_RESTORED
     }
 
     private SharedPreferences preferences;

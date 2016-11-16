@@ -3,6 +3,7 @@ package com.ababilo.pwd.pwdmanager.service.bluetooth;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.util.Log;
 
 import org.apache.commons.io.IOUtils;
 
@@ -77,7 +78,6 @@ public class BluetoothManager {
                         }
                     } catch (IOException e) {
                         observer.onReceiveError(e);
-                        e.printStackTrace();
                         break;
                     }
                 }
@@ -87,7 +87,6 @@ public class BluetoothManager {
         } catch (IOException e) {
             connected = false;
             observer.onConnectError(e);
-            e.printStackTrace();
             if (null != socket) {
                 try {
                     socket.close();
@@ -108,12 +107,12 @@ public class BluetoothManager {
             out.close();
             in.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e("BT", "Error on stream flush", e);
         }
         try {
             socket.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e("BT", "Error on socket close", e);
         }
         connected = false;
     }
@@ -123,7 +122,7 @@ public class BluetoothManager {
             out.write(data);
             out.flush();
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e("BT", "Error on data send", e);
         }
     }
 

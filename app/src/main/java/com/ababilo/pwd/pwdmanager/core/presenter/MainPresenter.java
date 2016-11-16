@@ -1,17 +1,16 @@
 package com.ababilo.pwd.pwdmanager.core.presenter;
 
-import android.util.Log;
-
 import com.ababilo.pwd.pwdmanager.App;
 import com.ababilo.pwd.pwdmanager.core.view.MainView;
 import com.ababilo.pwd.pwdmanager.model.Password;
+import com.ababilo.pwd.pwdmanager.service.DatabaseManager;
 import com.ababilo.pwd.pwdmanager.service.protocol.OnResponseReceived;
 import com.ababilo.pwd.pwdmanager.service.protocol.ProtocolService;
 import com.arellomobile.mvp.InjectViewState;
 
-import java.util.Arrays;
-
 import javax.inject.Inject;
+
+import rx.Observable;
 
 /**
  * Created by ababilo on 12.11.16.
@@ -22,6 +21,10 @@ public class MainPresenter extends BasePresenter<MainView> {
 
     @Inject
     ProtocolService protocolService;
+    @Inject
+    OnResponseReceived observer;
+    @Inject
+    DatabaseManager databaseManager;
 
     public MainPresenter() {
         App.getPresenterComponent().inject(this);
@@ -45,22 +48,14 @@ public class MainPresenter extends BasePresenter<MainView> {
             getViewState().onDeviceNotConnected();
             return;
         }
-        protocolService.connect(mac, new OnResponseReceived() {
-            @Override
-            public void onPongReceived() {
-                getViewState().onDeviceConnected();
-            }
+        Observable.concat(protocolService.connect(mac, observer), protocolService.sendPing())
+                .subscribe(
+                        none -> getViewState().onDeviceConnected(),
+                        throwable -> getViewState().onDeviceError()
+                );
+    }
 
-            @Override
-            public void onResponseReceived(byte[] data) {
-                // todo process
-                Log.i("BT Response", Arrays.toString(data));
-            }
-
-            @Override
-            public void onUnknownReceived() {
-                Log.w("DEVICE", "Unknown response");
-            }
-        }).flatMap(none -> protocolService.sendPing()).subscribe();
+    public void loadDatabase() {
+        databaseManager.getDatabase().subscribe(database -> getViewState().onDatabaseLoaded(database));
     }
 }
