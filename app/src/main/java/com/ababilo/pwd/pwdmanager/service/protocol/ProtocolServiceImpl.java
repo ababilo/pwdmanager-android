@@ -150,7 +150,8 @@ public class ProtocolServiceImpl implements ProtocolService {
                     switch (Responses.fromByte(data[0])) {
                         case PONG: listener.onPongReceived(); break;
                         case RESPONSE: listener.onResponseReceived(data); break;
-                        case BACKUP: listener.onBackupReceived(data); break;
+                        case BACKUP_RECEIVED: listener.onBackupReceived(data); break;
+                        case BACKUP_SENT: listener.onBackupSent(); break;
                         case UNKNOWN: listener.onUnknownReceived(); break;
                     }
                 }

@@ -10,4 +10,5 @@ public interface OnResponseReceived {
     void onResponseReceived(byte[] data);
     void onUnknownReceived();
     void onBackupReceived(byte[] data);
+    void onBackupSent();
 }

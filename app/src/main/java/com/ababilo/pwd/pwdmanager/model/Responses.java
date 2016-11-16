@@ -8,7 +8,8 @@ public enum Responses {
 
     PONG(0xFF),
     RESPONSE(0xEE),
-    BACKUP(0xAA),
+    BACKUP_RECEIVED(0xAA),
+    BACKUP_SENT(0xBB),
     UNKNOWN(0x00);
 
     private byte type;

@@ -45,4 +45,9 @@ public class ProtocolObserver implements OnResponseReceived {
     public void onBackupReceived(byte[] data) {
         backupService.createBackup(data);
     }
+
+    @Override
+    public void onBackupSent() {
+        rollKeys();
+    }
 }
