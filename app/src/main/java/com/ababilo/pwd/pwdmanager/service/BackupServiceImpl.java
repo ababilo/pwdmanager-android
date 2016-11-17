@@ -75,8 +75,8 @@ public class BackupServiceImpl implements BackupService {
             }
         }
         String json = gson.toJson(toBackup);
-        EncryptedPackage request = new EncryptedPackage(AESUtil.encrypt(json.getBytes(Charsets.UTF_8), localDb.getClientSecret()));
-        return client.api().createBackup(request);
+        EncryptedPackage request = new EncryptedPackage(AESUtil.encrypt(json.getBytes(Charsets.US_ASCII), localDb.getClientSecret()));
+        return client.api().createBackup(request, localDb.getClientId());
     }
 
     private Password getPassword(Database database, short id) {
@@ -104,7 +104,7 @@ public class BackupServiceImpl implements BackupService {
 
     @Override
     public Observable<Void> restoreBackup(Database database, OnBackupRestored onBackupRestored) {
-        return client.api().getBackup(createRestoreRequest(database.getClientId(), database.getClientSecret()))
+        return client.api().getBackup(database.getClientId())
                 .flatMap(encryptedPackage -> Observable.just(rebuildDatabase(database, encryptedPackage, onBackupRestored)))
                 .flatMap(databaseManager::flushDatabase);
     }
@@ -112,12 +112,12 @@ public class BackupServiceImpl implements BackupService {
     private Database rebuildDatabase(Database local, EncryptedPackage pack, OnBackupRestored onBackupRestored) {
         Log.i("BACKUP", "Started database rebuild");
         byte[] decrypted = AESUtil.decrypt(pack.getData(), local.getClientSecret());
-        Database backup = gson.fromJson(new String(decrypted, Charsets.US_ASCII), Database.class);
+        List<Password> backup = gson.fromJson(new String(decrypted, Charsets.US_ASCII), new TypeToken<List<Password>>() {}.getType());
 
 
-        List<Password> toDevice = new ArrayList<>(backup.getPasswords().size());
-        List<Password> toLocal = new ArrayList<>(backup.getPasswords().size());
-        for (Password entry : backup.getPasswords()) {
+        List<Password> toDevice = new ArrayList<>(backup.size());
+        List<Password> toLocal = new ArrayList<>(backup.size());
+        for (Password entry : backup) {
             byte[] randomPart = ProtocolKeysProvider.generateSecureBytes(128);
 
             byte[] part2 = new byte[128];
@@ -131,11 +131,6 @@ public class BackupServiceImpl implements BackupService {
         }
 
         onBackupRestored.call(toDevice);
-        return new Database(backup.getClientId(), backup.getClientSecret(), backup.getBtKey(), backup.getHbtKey(), toLocal);
-    }
-
-    private EncryptedPackage createRestoreRequest(String clientId, byte[] secret) {
-        Log.i("BACKUP", "Started backup restore");
-        return new EncryptedPackage(AESUtil.encrypt(clientId.getBytes(Charsets.US_ASCII), secret));
+        return new Database(local.getClientId(), local.getClientSecret(), local.getBtKey(), local.getHbtKey(), toLocal);
     }
 }

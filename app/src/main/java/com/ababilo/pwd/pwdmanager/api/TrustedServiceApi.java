@@ -4,7 +4,9 @@ import com.ababilo.pwd.pwdmanager.api.model.Confirmation;
 import com.ababilo.pwd.pwdmanager.api.model.EncryptedPackage;
 
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 import rx.Observable;
 
 /**
@@ -13,9 +15,9 @@ import rx.Observable;
 
 public interface TrustedServiceApi {
 
-    @POST(value = "/backup/create")
-    Observable<Confirmation> createBackup(@Body EncryptedPackage request);
+    @POST(value = "/backup")
+    Observable<Confirmation> createBackup(@Body EncryptedPackage request, @Query("clientId") String clientId);
 
-    @POST(value = "/backup/restore")
-    Observable<EncryptedPackage> getBackup(@Body EncryptedPackage request);
+    @GET(value = "/backup")
+    Observable<EncryptedPackage> getBackup(@Query("clientId") String clientId);
 }
