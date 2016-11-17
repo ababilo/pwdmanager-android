@@ -5,6 +5,11 @@ import android.util.Log;
 import com.ababilo.pwd.pwdmanager.service.BackupService;
 
 import java.util.Arrays;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by ababilo on 16.11.16.
@@ -14,6 +19,8 @@ public class ProtocolObserver implements OnResponseReceived {
 
     private final ProtocolKeysProvider keysProvider;
     private final BackupService backupService;
+
+    private BlockingQueue<Observable<Void>> queue = new ArrayBlockingQueue<>(10, true);
 
     public ProtocolObserver(ProtocolKeysProvider keysProvider,
                             BackupService backupService) {
@@ -27,6 +34,7 @@ public class ProtocolObserver implements OnResponseReceived {
 
     @Override
     public void onPongReceived() {
+        notifyCallerActivity();
     }
 
     @Override
@@ -34,20 +42,50 @@ public class ProtocolObserver implements OnResponseReceived {
         // todo process
         rollKeys();
         Log.i("BT Response", Arrays.toString(data));
+        notifyCallerActivity();
     }
 
     @Override
     public void onUnknownReceived() {
         Log.w("DEVICE", "Unknown response");
+        notifyCallerActivity();
     }
 
     @Override
     public void onBackupReceived(byte[] data) {
-        backupService.createBackup(data);
+        backupService.createBackup(data, null).subscribe(none -> {
+            rollKeys();
+            notifyCallerActivity();
+        }, throwable -> {
+            Log.e("OBSERVER", "Error creating backup", throwable);
+            notifyCallerActivity();
+        });
     }
 
     @Override
     public void onBackupSent() {
         rollKeys();
+        notifyCallerActivity();
+    }
+
+    @Override
+    public void putCompetitionCallback(OnCompete callback, OnError handler) {
+        queue.add(Observable.<Void>create(subscriber -> {
+            try {
+                callback.call();
+                subscriber.onNext(null);
+            } catch (Throwable th) {
+                handler.handle(th);
+                subscriber.onError(th);
+            }
+        }).subscribeOn(AndroidSchedulers.mainThread()) // operate in ui thread only
+                .observeOn(AndroidSchedulers.mainThread()));
+    }
+
+    private void notifyCallerActivity() {
+        Observable<Void> observable;
+        while (null != (observable = queue.poll())) {
+            observable.subscribe(none -> {}, th -> Log.e("OBSERVER", "Error in completion callback", th));
+        }
     }
 }

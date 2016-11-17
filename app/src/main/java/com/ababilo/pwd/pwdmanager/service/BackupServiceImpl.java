@@ -10,13 +10,13 @@ import com.ababilo.pwd.pwdmanager.model.Password;
 import com.ababilo.pwd.pwdmanager.service.protocol.ProtocolKeysProvider;
 import com.ababilo.pwd.pwdmanager.util.AESUtil;
 import com.ababilo.pwd.pwdmanager.util.ArrayUtils;
+import com.ababilo.pwd.pwdmanager.util.ObservableWrapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.io.Charsets;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -47,23 +47,23 @@ public class BackupServiceImpl implements BackupService {
     }
 
     @Override
-    public void createBackup(byte[] data) {
-        try {
-            byte[] decrypted = AESUtil.decrypt(data, keysProvider.getCurrentBTKey());
-            Map<Short, byte[]> remoteDb = gson.fromJson(new String(decrypted, Charsets.US_ASCII), new TypeToken<Map<Short, byte[]>>(){}.getType());
+    public Observable<Void> createBackup(byte[] data, OnBackupReceived callback) {
+        return new ObservableWrapper<Void>(Observable.create(subscriber -> {
+            try {
+                byte[] decrypted = AESUtil.decrypt(data, keysProvider.getCurrentBTKey());
+                Map<Short, byte[]> remoteDb = gson.fromJson(new String(decrypted, Charsets.US_ASCII), new TypeToken<Map<Short, byte[]>>(){}.getType());
 
-            databaseManager.getDatabase()
-                    .flatMap(database -> createBackup(database, remoteDb))
-                    .subscribe(
-                            confirmation -> {
-                                rollKeys();
-                                Log.i("PROTOCOL", "Confirmation received: " + Arrays.toString(confirmation.getSignature()));
-                            },
-                            throwable -> Log.e("PROTOCOL", "Error sending backup", throwable)
-                    );
-        } catch (Exception e) {
-            Log.e("PROTOCOL", "Error while backup", e);
-        }
+                databaseManager.getDatabase()
+                        .flatMap(database -> createBackup(database, remoteDb))
+                        .subscribe(
+                                confirmation -> subscriber.onNext(null),
+                                subscriber::onError
+                        );
+            } catch (Exception e) {
+                Log.e("PROTOCOL", "Error while backup", e);
+                subscriber.onError(e);
+            }
+        })).wrap();
     }
 
     private Observable<Confirmation> createBackup(Database localDb, Map<Short, byte[]> remoteDb) {

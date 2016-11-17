@@ -76,9 +76,8 @@ public class BluetoothManager {
                                 return;
                             }
                         }
-                    } catch (IOException e) {
+                    } catch (Exception e) {
                         observer.onReceiveError(e);
-                        break;
                     }
                 }
             });

@@ -16,7 +16,11 @@ public interface BackupService {
     interface OnBackupRestored {
         void call(List<Password> passwords);
     }
+    interface OnBackupReceived {
+        void onCompleted();
+        void onError(Throwable th);
+    }
 
-    void createBackup(byte[] data);
+    Observable<Void> createBackup(byte[] data, OnBackupReceived callback);
     Observable<Void> restoreBackup(Database database, OnBackupRestored onBackupRestored);
 }

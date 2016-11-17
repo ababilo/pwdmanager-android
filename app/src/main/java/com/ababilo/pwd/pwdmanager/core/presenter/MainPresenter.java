@@ -36,7 +36,10 @@ public class MainPresenter extends BasePresenter<MainView> {
         getViewState().startSending();
         protocolService.sendPassword(password)
                 .subscribe(
-                        none -> {},
+                        none -> observer.putCompetitionCallback(
+                                () -> getViewState().onDeviceConnected(),
+                                th -> getViewState().onDeviceError()
+                        ),
                         th -> {}
                 );
     }
@@ -49,7 +52,10 @@ public class MainPresenter extends BasePresenter<MainView> {
         protocolService.connect(mac, observer)
                 .flatMap(none -> protocolService.sendPing())
                 .subscribe(
-                        none -> getViewState().onDeviceConnected(),
+                        none -> observer.putCompetitionCallback(
+                                () -> getViewState().onDeviceConnected(),
+                                th -> getViewState().onDeviceError()
+                        ),
                         throwable -> getViewState().onDeviceError()
                 );
     }

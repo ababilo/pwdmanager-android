@@ -66,12 +66,12 @@ public class ProtocolServiceImpl implements ProtocolService {
     }
 
     @Override
-    public Observable<Void> connect(String mac, OnResponseReceived listener) {
+    public Observable<Void> connect(String mac, OnResponseReceived observer) {
         return new ObservableWrapper<Void>(Observable.create(subscriber -> {
             try {
                 Log.i("PROTOCOL", "Started connect");
                 if (!bluetoothManager.isConnected()) {
-                    connectInternal(mac, listener);
+                    connectInternal(mac, observer);
                 }
                 ensureConnected();
                 subscriber.onNext(null);
@@ -131,7 +131,7 @@ public class ProtocolServiceImpl implements ProtocolService {
         })).wrap();
     }
 
-    private void connectInternal(String mac, OnResponseReceived listener) {
+    private void connectInternal(String mac, OnResponseReceived observer) {
         bluetoothManager.connect(mac, new BluetoothObserver() {
             @Override
             public void onConnectError(Throwable th) {
@@ -148,11 +148,11 @@ public class ProtocolServiceImpl implements ProtocolService {
                 Log.i("BT", "RECEIVED " + Arrays.toString(data));
                 if (null != data && data.length > 0) {
                     switch (Responses.fromByte(data[0])) {
-                        case PONG: listener.onPongReceived(); break;
-                        case RESPONSE: listener.onResponseReceived(data); break;
-                        case BACKUP_RECEIVED: listener.onBackupReceived(data); break;
-                        case BACKUP_SENT: listener.onBackupSent(); break;
-                        case UNKNOWN: listener.onUnknownReceived(); break;
+                        case PONG: observer.onPongReceived(); break;
+                        case RESPONSE: observer.onResponseReceived(data); break;
+                        case BACKUP_RECEIVED: observer.onBackupReceived(data); break;
+                        case BACKUP_SENT: observer.onBackupSent(); break;
+                        case UNKNOWN: observer.onUnknownReceived(); break;
                     }
                 }
             }

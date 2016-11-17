@@ -5,6 +5,7 @@ import com.ababilo.pwd.pwdmanager.api.TrustedServiceClient;
 import com.ababilo.pwd.pwdmanager.core.view.SettingsView;
 import com.ababilo.pwd.pwdmanager.service.BackupService;
 import com.ababilo.pwd.pwdmanager.service.DatabaseManager;
+import com.ababilo.pwd.pwdmanager.service.protocol.OnResponseReceived;
 import com.ababilo.pwd.pwdmanager.service.protocol.ProtocolService;
 import com.ababilo.pwd.pwdmanager.util.ObservableWrapper;
 import com.arellomobile.mvp.InjectViewState;
@@ -29,6 +30,8 @@ public class SettingsPresenter extends BasePresenter<SettingsView> {
     TrustedServiceClient client;
     @Inject
     Gson gson;
+    @Inject
+    OnResponseReceived observer;
 
     public SettingsPresenter() {
         App.getPresenterComponent().inject(this);
@@ -39,7 +42,10 @@ public class SettingsPresenter extends BasePresenter<SettingsView> {
         new ObservableWrapper<Void>(databaseManager.getDatabase()
                 .flatMap(database -> protocolService.requestBackup(database.getClientId()))).wrap()
                 .subscribe(
-                        none -> getViewState().onRequestAccepted(),
+                        none -> observer.putCompetitionCallback(
+                                () -> getViewState().onRequestAccepted(),
+                                th -> getViewState().onRequestError()
+                        ),
                         th -> getViewState().onRequestError()
                 );
     }
@@ -49,7 +55,10 @@ public class SettingsPresenter extends BasePresenter<SettingsView> {
         new ObservableWrapper<Void>(databaseManager.getDatabase()
                 .flatMap(database -> backupService.restoreBackup(database, passwords -> protocolService.sendBackup(passwords)))).wrap()
                 .subscribe(
-                        none -> getViewState().onRequestAccepted(),
+                        none -> observer.putCompetitionCallback(
+                                () -> getViewState().onRequestAccepted(),
+                                th -> getViewState().onRequestError()
+                        ),
                         th -> getViewState().onRequestError()
                 );
     }

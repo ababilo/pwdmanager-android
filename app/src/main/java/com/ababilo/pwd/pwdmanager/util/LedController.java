@@ -1,6 +1,7 @@
 package com.ababilo.pwd.pwdmanager.util;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.ababilo.pwd.pwdmanager.R;
@@ -33,6 +34,7 @@ public class LedController {
     }
 
     public void setState(State state) {
+        Log.i("LED", "Thread " + Thread.currentThread().getName());
         if (null != led) {
             led.setIcon(context.getResources().getDrawable(state.resource, context.getTheme()));
         }
