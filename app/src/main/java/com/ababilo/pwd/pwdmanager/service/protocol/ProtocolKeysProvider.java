@@ -5,6 +5,7 @@ import android.util.Log;
 import com.ababilo.pwd.pwdmanager.util.ArrayUtils;
 
 import java.security.SecureRandom;
+import java.util.Arrays;
 
 /**
  * Created by ababilo on 14.11.16.
@@ -24,7 +25,7 @@ public class ProtocolKeysProvider {
         return currentBTKey;
     }
 
-    public byte[] getCurrentHBTKEy() {
+    public byte[] getCurrentHBTKey() {
         return currentHBTKEy;
     }
 
@@ -32,6 +33,7 @@ public class ProtocolKeysProvider {
         Log.i("KEYS", "loadKeys");
         this.currentBTKey = btKey;
         this.currentHBTKEy = htbKey;
+        Log.d("KEYS", "Set BTKEY: " + Arrays.toString(btKey));
     }
 
     public synchronized void rollKeys() {
@@ -44,7 +46,9 @@ public class ProtocolKeysProvider {
         nextBTKey = generateKey();
         nextHBTKey = generateKey();
 
-        return ArrayUtils.concatArrays(data, nextBTKey, nextHBTKey);
+        Log.d("KEYS", "Generated BTKEY: " + Arrays.toString(nextBTKey));
+
+        return ArrayUtils.concatArrays(data, nextBTKey);//, nextHBTKey); // todo?
     }
 
     private byte[] generateKey() {

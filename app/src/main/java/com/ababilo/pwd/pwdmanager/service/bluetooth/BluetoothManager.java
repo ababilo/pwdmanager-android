@@ -116,12 +116,13 @@ public class BluetoothManager {
         connected = false;
     }
 
-    public synchronized void sendData(byte[] data) {
+    public synchronized void sendData(byte[] data) throws IOException {
         try {
             out.write(data);
             out.flush();
         } catch (IOException e) {
             Log.e("BT", "Error on data send", e);
+            throw e;
         }
     }
 

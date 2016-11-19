@@ -53,7 +53,7 @@ public class ProtocolObserver implements OnResponseReceived {
 
     @Override
     public void onBackupReceived(byte[] data) {
-        backupService.createBackup(data, null).subscribe(none -> {
+        backupService.createBackup(data).subscribe(none -> {
             rollKeys();
             notifyCallerActivity();
         }, throwable -> {
@@ -64,15 +64,18 @@ public class ProtocolObserver implements OnResponseReceived {
 
     @Override
     public void onBackupSent() {
-        rollKeys();
+        Log.i("OBSERVER", "Backup sent");
+        //rollKeys();
         notifyCallerActivity();
     }
 
     @Override
     public void putCompetitionCallback(OnCompete callback, OnError handler) {
+        Log.i("OBSERVER", "Added completion callback " + callback);
         queue.add(Observable.<Void>create(subscriber -> {
             try {
                 callback.call();
+                Log.i("OBSERVER", "Ran completion callback " + callback);
                 subscriber.onNext(null);
             } catch (Throwable th) {
                 handler.handle(th);

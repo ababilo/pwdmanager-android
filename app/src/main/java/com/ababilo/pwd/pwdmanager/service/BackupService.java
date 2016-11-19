@@ -14,13 +14,9 @@ import rx.Observable;
 public interface BackupService {
 
     interface OnBackupRestored {
-        void call(List<Password> passwords);
-    }
-    interface OnBackupReceived {
-        void onCompleted();
-        void onError(Throwable th);
+        Observable<Void> call(List<Password> passwords);
     }
 
-    Observable<Void> createBackup(byte[] data, OnBackupReceived callback);
+    Observable<Void> createBackup(byte[] data);
     Observable<Void> restoreBackup(Database database, OnBackupRestored onBackupRestored);
 }

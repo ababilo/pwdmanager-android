@@ -1,6 +1,6 @@
 package com.ababilo.pwd.pwdmanager.api;
 
-import android.content.Context;
+import com.google.gson.Gson;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
@@ -16,7 +16,7 @@ public class ClientFactory {
 
     private Retrofit retrofit;
 
-    public Retrofit getClient(String baseUrl, final Context context) {
+    public Retrofit getClient(String baseUrl, Gson gson) {
         if (null == retrofit) {
 //            Interceptor interceptor = chain -> {
 //                Request request = chain.request();
@@ -39,7 +39,7 @@ public class ClientFactory {
             retrofit = new Retrofit.Builder()
                     .baseUrl(baseUrl)
                     .client(client)
-                    .addConverterFactory(GsonConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create(gson))
                     .addCallAdapterFactory(rxAdapter)
                     .build();
         }

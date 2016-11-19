@@ -112,11 +112,14 @@ public class MainActivity extends MoxyAppCompatActivity implements MainView {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        presenter.loadDatabase();
+    }
+
     private void loadData() {
         database = (Database) getIntent().getSerializableExtra("DATABASE");
-        if (null == database) {
-            presenter.loadDatabase();
-        }
     }
 
     @Override

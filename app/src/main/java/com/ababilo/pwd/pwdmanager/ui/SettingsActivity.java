@@ -24,7 +24,6 @@ import com.ababilo.pwd.pwdmanager.core.view.SettingsView;
 import com.ababilo.pwd.pwdmanager.util.PreferencesManager;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -155,7 +154,7 @@ public class SettingsActivity extends MoxyAppCompatPreferenceActivity implements
 
     @Override
     public void onRequestAccepted() {
-        preferencesManager.setString(PreferencesManager.Preference.LAST_BACKUP_CREATED, new Date().toString());
+        //preferencesManager.setString(PreferencesManager.Preference.LAST_BACKUP_CREATED, new Date().toString()); //todo
         if (null != progressDialog) {
             progressDialog.dismiss();
             progressDialog = null;

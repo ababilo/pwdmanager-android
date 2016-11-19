@@ -14,10 +14,6 @@ import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.util.Collections;
-import java.util.UUID;
 
 import rx.Observable;
 
@@ -31,7 +27,7 @@ public class DatabaseManagerImpl implements DatabaseManager {
     private final ProtocolKeysProvider keysProvider;
     private byte[] password;
     private String path;
-    private Database cached = new Database(UUID.randomUUID().toString(), new byte[128], new byte[32], new byte[32], Collections.emptyList()); // todo remove
+    private Database cached;// = new Database(UUID.randomUUID().toString(), new byte[128], new byte[32], new byte[32], Collections.emptyList()); // todo remove
 
     public DatabaseManagerImpl(Gson gson, ProtocolKeysProvider keysProvider) {
         this.gson = gson;
@@ -74,17 +70,19 @@ public class DatabaseManagerImpl implements DatabaseManager {
 
     @Override
     public Observable<Void> flushDatabase(Database database) {
-        return new ObservableWrapper<Void>(Observable.create(subscriber -> {
+        return new ObservableWrapper<>(Observable.<Void>create(subscriber -> {
             try {
+                Log.i("DB", "Started flush");
                 String json = gson.toJson(database);
                 byte[] encrypted = AESUtil.encrypt(json.getBytes(Charsets.US_ASCII), password);
-                try (OutputStream out = new FileOutputStream(this.path)) {
-                    IOUtils.write(encrypted, out);
-                    out.flush();
-                }
+//                try (OutputStream out = new FileOutputStream(this.path)) {
+//                    IOUtils.write(encrypted, out);
+//                    out.flush();
+//                } // todo
+                subscriber.onNext(null);
             } catch (Exception e) {
                 subscriber.onError(e);
             }
-        })).wrap().doOnNext(none -> cached = null);
+        }).doOnNext(none -> cached = database)).wrap();
     }
 }

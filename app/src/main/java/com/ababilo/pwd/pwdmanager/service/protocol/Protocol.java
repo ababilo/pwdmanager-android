@@ -44,13 +44,14 @@ public class Protocol {
         byte[] payload = keysProvider.appendNextKeys(data);
 
         byte[] encrypted = AESUtil.encrypt(payload, keysProvider.getCurrentBTKey());
-        byte[] signature = HashUtils.hmacSha256(encrypted, keysProvider.getCurrentHBTKEy());
+        byte[] signature = HashUtils.hmacSha256(encrypted, keysProvider.getCurrentHBTKey()); // todo?
 
-        return ArrayUtils.concatArrays(encrypted, signature); // iv + encrypted + signature
+        return encrypted;//ArrayUtils.concatArrays(encrypted, signature); // iv + encrypted + signature
     }
 
     public byte[] sendBackup(List<Password> passwords) {
         byte[] data = new byte[0];
+        data = ArrayUtils.concatArrays(data, new byte[] {(byte) passwords.size()});
         for (Password password : passwords) {
             data = ArrayUtils.concatArrays(data, ArrayUtils.concatArrays(ShortUtil.getShortBytes(password.getId()), password.getPart()));
         }

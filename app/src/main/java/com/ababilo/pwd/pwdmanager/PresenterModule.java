@@ -81,8 +81,8 @@ public class PresenterModule {
 
     @Provides
     @Singleton
-    TrustedServiceClient trustedServiceClient(ClientFactory factory, Context context) {
-        return new TrustedServiceClient(factory, context);
+    TrustedServiceClient trustedServiceClient(ClientFactory factory, Gson gson, Context context) {
+        return new TrustedServiceClient(factory, gson, context);
     }
 
     @Provides

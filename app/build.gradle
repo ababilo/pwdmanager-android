@@ -16,7 +16,7 @@ android {
         if (project.hasProperty('service_endpoint')) {
             resValue "string", "service.endpoint", service_endpoint
         } else {
-            resValue "string", "service.endpoint", "http://localhost:8080"
+            resValue "string", "service.endpoint", "http://192.168.0.103:8080"
         }
     }
     buildTypes {

@@ -3,6 +3,7 @@ package com.ababilo.pwd.pwdmanager.api;
 import android.content.Context;
 
 import com.ababilo.pwd.pwdmanager.R;
+import com.google.gson.Gson;
 
 import retrofit2.Retrofit;
 
@@ -14,8 +15,8 @@ public class TrustedServiceClient {
 
     private TrustedServiceApi api;
 
-    public TrustedServiceClient(ClientFactory factory, Context context) {
-        Retrofit client = factory.getClient(context.getString(R.string.service_endpoint), context);
+    public TrustedServiceClient(ClientFactory factory, Gson gson, Context context) {
+        Retrofit client = factory.getClient(context.getString(R.string.service_endpoint), gson);
         this.api = client.create(TrustedServiceApi.class);
     }
 

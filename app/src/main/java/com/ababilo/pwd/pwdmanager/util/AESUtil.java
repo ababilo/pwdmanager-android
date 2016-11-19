@@ -1,5 +1,7 @@
 package com.ababilo.pwd.pwdmanager.util;
 
+import android.util.Log;
+
 import org.apache.commons.io.IOUtils;
 
 import java.io.ByteArrayInputStream;
@@ -8,6 +10,7 @@ import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.SecureRandom;
+import java.util.Arrays;
 
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
@@ -35,9 +38,11 @@ public class AESUtil {
 
     public static byte[] encrypt(byte[] data, byte[] key) {
         byte[] iv = generateIV();
+        Log.d("AES", "IV: " + Arrays.toString(iv));
 
         byte[] encryptedData;
         try {
+            Log.d("AES", "Encrypting using key: " + Arrays.toString(key));
             encryptedData = encrypt(key, iv, data);
         } catch (Exception ex) {
             return null;

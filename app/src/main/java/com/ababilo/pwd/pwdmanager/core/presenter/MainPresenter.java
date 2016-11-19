@@ -40,7 +40,7 @@ public class MainPresenter extends BasePresenter<MainView> {
                                 () -> getViewState().onDeviceConnected(),
                                 th -> getViewState().onDeviceError()
                         ),
-                        th -> {}
+                        th -> getViewState().onDeviceError()
                 );
     }
 
