@@ -1,6 +1,5 @@
 package com.ababilo.pwd.pwdmanager.ui;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -14,15 +13,12 @@ import com.ababilo.pwd.pwdmanager.R;
 import com.ababilo.pwd.pwdmanager.core.presenter.AddPasswordPresenter;
 import com.ababilo.pwd.pwdmanager.core.presenter.BasePresenter;
 import com.ababilo.pwd.pwdmanager.core.view.AddPasswordView;
-import com.ababilo.pwd.pwdmanager.model.Password;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class AddPasswordActivity extends MoxyAppCompatActivity implements AddPasswordView {
-
-    public static final int REQUEST_CODE = 1403;
 
     @BindView(R.id.AddPasswordActivity__toolbar)
     Toolbar toolbar;
@@ -83,14 +79,6 @@ public class AddPasswordActivity extends MoxyAppCompatActivity implements AddPas
     @Override
     protected BasePresenter getPresenter() {
         return presenter;
-    }
-
-    @Override
-    public void onSuccessful(Password password) {
-        Intent intent = this.getIntent();
-        intent.putExtra("PASSWORD", password);
-        setResult(RESULT_OK, intent);
-        presenter.savePassword(password);
     }
 
     @Override

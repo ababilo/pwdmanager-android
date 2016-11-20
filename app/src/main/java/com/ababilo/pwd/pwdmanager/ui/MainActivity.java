@@ -68,7 +68,7 @@ public class MainActivity extends MoxyAppCompatActivity implements MainView {
         loadData();
 
         setSupportActionBar(toolbar);
-        fab.setOnClickListener(v -> ActivityUtil.loadActivityForResult(self(), AddPasswordActivity.class, AddPasswordActivity.REQUEST_CODE));
+        fab.setOnClickListener(v -> ActivityUtil.loadActivity(self(), AddPasswordActivity.class));
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
@@ -130,15 +130,6 @@ public class MainActivity extends MoxyAppCompatActivity implements MainView {
         MenuItem led = menu.findItem(R.id.MainActivity__menu_led);
         ledController = new LedController(this, led);
         return true;
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == AddPasswordActivity.REQUEST_CODE && resultCode == RESULT_OK) {
-            Password password = (Password) data.getExtras().getSerializable("PASSWORD");
-            database.getPasswords().add(password);
-            recyclerView.getAdapter().notifyDataSetChanged();
-        }
     }
 
     public void onLedClick(MenuItem item) {

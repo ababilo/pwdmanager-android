@@ -34,7 +34,7 @@ public class AddPasswordPresenter extends BasePresenter<AddPasswordView> {
                 );
     }
 
-    public void savePassword(Password password) {
+    private void savePassword(Password password) {
         databaseManager.getDatabase().doOnNext(database -> {
             database.getPasswords().add(password);
         }).flatMap(database -> databaseManager.flushDatabase(database)).subscribe(
