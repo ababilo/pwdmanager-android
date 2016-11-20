@@ -29,10 +29,13 @@ public class Protocol {
 
     public byte[] addPassword(short id, String title, String password, byte[] randomPart) {
         byte[] part2 = new byte[128];
-        byte[] passwordBytes = password.getBytes(Charsets.US_ASCII);
+        byte[] passwordBytes = new byte[128];
+        byte[] bytes = password.getBytes(Charsets.US_ASCII);
+        System.arraycopy(bytes, 0, passwordBytes, 0, bytes.length);
         for (int i = 0; i < passwordBytes.length; i++) {
             part2[i] = (byte) (passwordBytes[i] ^ randomPart[i]);
         }
+
         return sendPassword(new Password(id, title, part2));
     }
 

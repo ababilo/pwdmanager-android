@@ -13,4 +13,5 @@ public interface AddPasswordView extends BaseView {
 
     void onSuccessful(Password password);
     void onError();
+    void onPasswordSaved();
 }

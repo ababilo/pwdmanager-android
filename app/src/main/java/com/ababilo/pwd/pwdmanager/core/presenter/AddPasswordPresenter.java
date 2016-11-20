@@ -2,6 +2,7 @@ package com.ababilo.pwd.pwdmanager.core.presenter;
 
 import com.ababilo.pwd.pwdmanager.App;
 import com.ababilo.pwd.pwdmanager.core.view.AddPasswordView;
+import com.ababilo.pwd.pwdmanager.model.Password;
 import com.ababilo.pwd.pwdmanager.service.DatabaseManager;
 import com.ababilo.pwd.pwdmanager.service.protocol.ProtocolService;
 import com.arellomobile.mvp.InjectViewState;
@@ -28,8 +29,17 @@ public class AddPasswordPresenter extends BasePresenter<AddPasswordView> {
         databaseManager.getDatabase()
                 .flatMap(database -> protocolService.addPassword((short) database.getPasswords().size(), title, password))
                 .subscribe(
-                        pwd -> getViewState().onSuccessful(pwd),
+                        this::savePassword,
                         th -> getViewState().onError()
                 );
+    }
+
+    public void savePassword(Password password) {
+        databaseManager.getDatabase().doOnNext(database -> {
+            database.getPasswords().add(password);
+        }).flatMap(database -> databaseManager.flushDatabase(database)).subscribe(
+                none -> getViewState().onPasswordSaved(),
+                throwable -> {}
+        );
     }
 }

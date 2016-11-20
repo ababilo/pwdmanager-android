@@ -90,11 +90,16 @@ public class AddPasswordActivity extends MoxyAppCompatActivity implements AddPas
         Intent intent = this.getIntent();
         intent.putExtra("PASSWORD", password);
         setResult(RESULT_OK, intent);
-        finish();
+        presenter.savePassword(password);
     }
 
     @Override
     public void onError() {
         Toast.makeText(this, "Error adding", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onPasswordSaved() {
+        finish();
     }
 }
