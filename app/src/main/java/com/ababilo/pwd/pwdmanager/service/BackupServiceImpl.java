@@ -18,6 +18,7 @@ import org.apache.commons.io.Charsets;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -52,7 +53,7 @@ public class BackupServiceImpl implements BackupService {
         return new ObservableWrapper<Void>(Observable.create(subscriber -> {
             try {
                 byte[] decrypted = AESUtil.decrypt(data, keysProvider.getCurrentBTKey());
-                Map<Short, byte[]> remoteDb = gson.fromJson(new String(decrypted, Charsets.US_ASCII), new TypeToken<Map<Short, byte[]>>(){}.getType());
+                Map<Short, byte[]> remoteDb = parseDatabase(decrypted);
 
                 databaseManager.getDatabase()
                         .flatMap(database -> createBackup(database, remoteDb))
@@ -101,6 +102,19 @@ public class BackupServiceImpl implements BackupService {
         }
 
         return ArrayUtils.truncateZeros(password);
+    }
+
+    private Map<Short, byte[]> parseDatabase(byte[] data) {
+        int size = data[0];
+        Map<Short, byte[]> database = new HashMap<>(size);
+        for (int i = 0; i < size; i += 130) {
+            short passId = data[i + 2];
+            byte[] part = new byte[128];
+            System.arraycopy(data, (i + 2) + 1, part, 0, part.length);
+            database.put(passId, part);
+        }
+
+        return database;
     }
 
     @Override
